@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//Code by DW
-
 @Entity
 public class MealPlan extends AbstractEntity {
 

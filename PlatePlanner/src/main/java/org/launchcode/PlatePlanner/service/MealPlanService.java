@@ -9,8 +9,7 @@ import org.launchcode.PlatePlanner.repository.RecipeRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
 
 import java.util.Optional;
-
-//Code by DW
+import java.util.Set;
 
 public class MealPlanService {
 
@@ -18,17 +17,30 @@ public class MealPlanService {
     private RecipeRepository recipeRepository;
     private UserRepository userRepository;
 
-    //Users can create a meal plan
+    //Users can create a meal plan so long as the name is unique
 
     public MealPlan createMealPlan(Long userId, String mealPlanName) {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if (optionalUser.isEmpty()) {
-            throw new IllegalArgumentException("User with ID " + userId + " not found.");
+            throw new EntityNotFoundException("User with ID " + userId + " not found.");
         }
 
+        User user = optionalUser.get();
 
+        Set<MealPlan> userMealPlans = user.getMealPlans();
 
+        for (MealPlan mealPlan : userMealPlans) {
+            if (mealPlan.getName().equalsIgnoreCase(mealPlanName)) {
+                throw new IllegalArgumentException("A meal plan with the name " + mealPlanName + " already exists.");
+            }
+        }
+
+        MealPlan mealPlan = new MealPlan(user, mealPlanName);
+
+        mealPlanRepository.save(mealPlan);
+
+        return mealPlan;
     }
 
     //Users can add a recipe to an existing meal plan

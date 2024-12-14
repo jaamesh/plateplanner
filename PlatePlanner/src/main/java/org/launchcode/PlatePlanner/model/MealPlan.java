@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//Code by DW
+
 @Entity
 public class MealPlan extends AbstractEntity {
 
@@ -31,27 +33,17 @@ public class MealPlan extends AbstractEntity {
     private String name;
 
     @NotNull
+    private LocalDateTime createdAt;
+
     private LocalDateTime startDate;
 
-    @NotNull
     private LocalDateTime endDate;
-
-    @NotNull
-    private LocalDateTime createdAt;
 
     public MealPlan() {}
 
-    public MealPlan(User user, List<Recipe> recipes, ShoppingList shoppingList, String name, LocalDateTime startDate, LocalDateTime endDate) {
+    public MealPlan(User user, String name) {
         this.user = user;
-        this.recipes = recipes;
-        this.shoppingList = shoppingList;
         this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    @PrePersist
-    public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 

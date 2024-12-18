@@ -176,6 +176,12 @@ public class Recipe extends AbstractEntity {
         tags.remove(tag);
     }
 
+    public void assignToIngredients() {
+        for (RecipeIngredient ingredient : this.recipeIngredients) {
+            ingredient.setRecipe(this);
+        }
+    }
+
     @Override
     public String toString() {
         return "Recipe: " + this.name;

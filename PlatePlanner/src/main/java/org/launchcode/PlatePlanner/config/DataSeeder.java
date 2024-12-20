@@ -54,17 +54,11 @@ public class DataSeeder {
                         null
                 );
 
-                RecipeIngredient recipeIngredient1 = new RecipeIngredient(null, spaghetti, 1, "lb");
-                RecipeIngredient recipeIngredient2 = new RecipeIngredient(null, garlic, 1, "head");
-                RecipeIngredient recipeIngredient3 = new RecipeIngredient(null, oliveOil, .333, "cup");
-                RecipeIngredient recipeIngredient4 = new RecipeIngredient(null, parmesan, .25, "cup");
-                RecipeIngredient recipeIngredient5 = new RecipeIngredient(null, parsley, 3, "tbsp");
-
-                recipeIngredient1.setRecipe(recipe1);
-                recipeIngredient2.setRecipe(recipe1);
-                recipeIngredient3.setRecipe(recipe1);
-                recipeIngredient4.setRecipe(recipe1);
-                recipeIngredient5.setRecipe(recipe1);
+                RecipeIngredient recipeIngredient1 = new RecipeIngredient(recipe1, spaghetti, 1, "lb");
+                RecipeIngredient recipeIngredient2 = new RecipeIngredient(recipe1, garlic, 1, "head");
+                RecipeIngredient recipeIngredient3 = new RecipeIngredient(recipe1, oliveOil, .333, "cup");
+                RecipeIngredient recipeIngredient4 = new RecipeIngredient(recipe1, parmesan, .25, "cup");
+                RecipeIngredient recipeIngredient5 = new RecipeIngredient(recipe1, parsley, 3, "tbsp");
 
                 recipe1.addRecipeIngredient(recipeIngredient1);
                 recipe1.addRecipeIngredient(recipeIngredient2);
@@ -101,13 +95,9 @@ public class DataSeeder {
                         null
                 );
 
-                RecipeIngredient recipeIngredient6 = new RecipeIngredient(null, bread, 2, "slices");
-                RecipeIngredient recipeIngredient7 = new RecipeIngredient(null, butter, 2, "tbsp");
-                RecipeIngredient recipeIngredient8 = new RecipeIngredient(null, cheddarCheese, 2, "slices");
-
-                recipeIngredient6.setRecipe(recipe2);
-                recipeIngredient7.setRecipe(recipe2);
-                recipeIngredient8.setRecipe(recipe2);
+                RecipeIngredient recipeIngredient6 = new RecipeIngredient(recipe2, bread, 2, "slices");
+                RecipeIngredient recipeIngredient7 = new RecipeIngredient(recipe2, butter, 2, "tbsp");
+                RecipeIngredient recipeIngredient8 = new RecipeIngredient(recipe2, cheddarCheese, 2, "slices");
 
                 recipe2.addRecipeIngredient(recipeIngredient6);
                 recipe2.addRecipeIngredient(recipeIngredient7);

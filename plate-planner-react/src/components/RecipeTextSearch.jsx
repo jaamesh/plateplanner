@@ -49,7 +49,7 @@ const RecipeTextSearch = () => {
                 </label>
                 <button type="submit">Submit</button>
             </form>
-            <RecipeCards recipes={recipes} title="Search Results" />
+            <RecipeCards recipes={recipes} numRecipes={recipes.length} title="Search Results" />
             {/*
             {recipes.map((recipe) => (
                 <div key={recipe.id} className="card">

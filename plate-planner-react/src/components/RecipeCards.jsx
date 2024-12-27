@@ -11,7 +11,9 @@ function RecipeCards(props) {
     if (props.recipes != undefined) {
         return (
          <div>
-            <h1>{props.title}</h1>
+            {props.recipes != null && props.title && 
+            <h1>{props.numRecipes} {props.title}</h1>
+            }
             {props.recipes.map((recipe) => (
                 <div key={recipe.id} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>

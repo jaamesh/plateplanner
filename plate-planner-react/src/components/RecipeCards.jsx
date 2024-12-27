@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+function addTags(recipeId) {
+    alert("recipeId: " + recipeId);
+  }
+
+
 function RecipeCards(props) {
 
     if (props.recipes != undefined) {
@@ -11,6 +16,7 @@ function RecipeCards(props) {
                 <div key={recipe.id} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>
                     <p>{recipe.description}</p>
+                    <p><input type="button" value="Add Tag" onClick={() => addTags(recipe.id)}/></p>
                     <img src={recipe.imageURL} alt={recipe.name + " image"} className='card-img-top mx-auto d-block w-25'/>
                     <h3>Ingredients:</h3>
                     <ul>

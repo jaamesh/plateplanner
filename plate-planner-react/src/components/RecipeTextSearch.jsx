@@ -49,6 +49,8 @@ const RecipeTextSearch = () => {
                 </label>
                 <button type="submit">Submit</button>
             </form>
+            <RecipeCards recipes={recipes} title="Search Results" />
+            {/*
             {recipes.map((recipe) => (
                 <div key={recipe.id} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>
@@ -66,6 +68,7 @@ const RecipeTextSearch = () => {
                     <p>{recipe.instructions}</p>
                 </div>
             ))}
+            */}
         </div>
     );
 };

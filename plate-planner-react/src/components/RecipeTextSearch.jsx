@@ -5,7 +5,7 @@ import RecipeCards from './RecipeCards.jsx';
 
 const RecipeTextSearch = () => {
     const [query, setQuery] = useState('');
-    const [recipes, setRecipes] = useState([]);
+    const [searchRecipes, setSearchRecipes] = useState();
     const [loading, setLoading] = useState(null);
     const [error, setError] = useState(null);
 
@@ -22,7 +22,7 @@ const RecipeTextSearch = () => {
         fetch('http://localhost:8080/search-recipes?q=' + query)
         .then(response => response.json())
         .then(data => { 
-            setRecipes(data);
+            setSearchRecipes(data);
             setLoading(false);
         })
         .catch(error => {
@@ -49,7 +49,7 @@ const RecipeTextSearch = () => {
                 </label>
                 <button type="submit">Submit</button>
             </form>
-            <RecipeCards recipes={recipes} numRecipes={recipes.length} title="Search Results" />
+            <RecipeCards recipes={searchRecipes} title="Search Results" />
             {/*
             {recipes.map((recipe) => (
                 <div key={recipe.id} className="card">

@@ -19,17 +19,17 @@ public class UserController {
     private UserRepository userRepository;
 
 
-    @GetMapping
+    @GetMapping("/all")
     public List<User> getAllSavedUsers() {
         return (List<User>) userRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<User> getSavedUser(Long userId) {
+    @GetMapping("/{userId}")
+    public Optional<User> getSavedUser(@PathVariable Long userId) {
         return userRepository.findById(userId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public User createUser(@RequestBody @Valid User user, Errors errors) {
 //        TODO: replace this line with appropriate User methods
         if(errors.hasErrors()) {
@@ -38,8 +38,8 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @PostMapping()
-    public void updateUser(@RequestBody @Valid User user, Long userId) {
+    @PostMapping("/update/{userId}")
+    public void updateUser(@PathVariable Long userId, @RequestBody @Valid User user) {
         if (userRepository.existsById(userId)) {
             userRepository.save(user);
         } else {
@@ -47,10 +47,9 @@ public class UserController {
         }
     }
 
-    @DeleteMapping
-    public void deleteUser(Long userId) {
+    @DeleteMapping("/delete/{userId}")
+    public void deleteUser(@PathVariable Long userId) {
         userRepository.deleteById(userId);
     }
-
 
 }

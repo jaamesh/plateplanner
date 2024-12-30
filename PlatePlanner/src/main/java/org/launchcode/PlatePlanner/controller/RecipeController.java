@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("recipes")
+@RequestMapping("recipe")
 @CrossOrigin(origins = "http://localhost:5173")
 public class RecipeController {
 
@@ -20,25 +20,25 @@ public class RecipeController {
     private RecipeRepository recipeRepository;
 
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Recipe> getAllSavedRecipes() {
         return (List<Recipe>) recipeRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<Recipe> getSavedRecipe(Long recipeId) {
+    @GetMapping("/{recipeId}")
+    public Optional<Recipe> getSavedRecipe(@PathVariable Long recipeId) {
         return recipeRepository.findById(recipeId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public Recipe createRecipe(@RequestBody @Valid Recipe recipe, Errors errors) {
         recipe.assignToIngredients();
         return recipeRepository.save(recipe);
     }
 
-    @PostMapping()
-    public void updateRecipe(@RequestBody @Valid Recipe recipe) {
-        if (recipeRepository.existsById(recipe.getId())) {
+    @PostMapping("/update/{recipeId}")
+    public void updateRecipe(@PathVariable Long recipeId, @RequestBody @Valid Recipe recipe) {
+        if (recipeRepository.existsById(recipeId)) {
             recipe.assignToIngredients();
             recipeRepository.save(recipe);
         } else {
@@ -46,8 +46,8 @@ public class RecipeController {
         }
     }
 
-    @DeleteMapping
-    public void deleteRecipe(Long recipeId) {
+    @DeleteMapping("/delete/{recipeId}")
+    public void deleteRecipe(@PathVariable Long recipeId) {
         recipeRepository.deleteById(recipeId);
     }
 

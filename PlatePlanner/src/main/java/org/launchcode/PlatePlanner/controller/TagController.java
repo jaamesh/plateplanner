@@ -18,17 +18,17 @@ public class TagController {
     @Autowired
     private TagRepository tagRepository;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Tag> getAllTags() {
         return (List<Tag>) tagRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<Tag> getSavedTags(Long tagId) {
+    @GetMapping("/{tagId}")
+    public Optional<Tag> getSavedTags(@PathVariable Long tagId) {
         return tagRepository.findById(tagId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public Tag createTag(@RequestBody @Valid Tag tag, Errors errors) {
         if(errors.hasErrors()) {
             System.out.println(errors);
@@ -36,8 +36,8 @@ public class TagController {
         return tagRepository.save(tag);
     }
 
-    @PostMapping()
-    public void updateTag(@RequestBody @Valid Tag tag, Long tagId) {
+    @PostMapping("/update/{tagId}")
+    public void updateTag(@PathVariable Long tagId, @RequestBody @Valid Tag tag) {
         if (tagRepository.existsById(tagId)) {
             tagRepository.save(tag);
         } else {
@@ -45,8 +45,8 @@ public class TagController {
         }
     }
 
-    @DeleteMapping
-    public void deleteTag(Long tagId) {
+    @DeleteMapping("/delete/{tagId}")
+    public void deleteTag(@PathVariable Long tagId) {
         tagRepository.deleteById(tagId);
     }
 

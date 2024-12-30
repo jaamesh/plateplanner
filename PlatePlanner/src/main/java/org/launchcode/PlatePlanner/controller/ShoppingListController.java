@@ -11,24 +11,24 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("shoppingList")
+@RequestMapping("shopping-list")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ShoppingListController {
 
     @Autowired
     private ShoppingListRepository shoppingListRepository;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<ShoppingList> getAllShoppingLists() {
         return (List<ShoppingList>) shoppingListRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<ShoppingList> getSavedShoppingList(Long shoppingListId) {
+    @GetMapping("/{shoppingListId}")
+    public Optional<ShoppingList> getSavedShoppingList(@PathVariable Long shoppingListId) {
         return shoppingListRepository.findById(shoppingListId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ShoppingList createShoppingList(@RequestBody @Valid ShoppingList shoppingList, Errors errors) {
 //        TODO: replace this line with appropriate ShoppingList logic
         if(errors.hasErrors()) {
@@ -37,8 +37,8 @@ public class ShoppingListController {
         return shoppingListRepository.save(shoppingList);
     }
 
-    @PostMapping()
-    public void updateShoppingList(@RequestBody @Valid ShoppingList shoppingList, Long shoppingListId) {
+    @PostMapping("/update/{shoppingListId}")
+    public void updateShoppingList(@PathVariable Long shoppingListId, @RequestBody @Valid ShoppingList shoppingList) {
         if (shoppingListRepository.existsById(shoppingListId)) {
             shoppingListRepository.save(shoppingList);
         } else {
@@ -46,8 +46,8 @@ public class ShoppingListController {
         }
     }
 
-    @DeleteMapping
-    public void deleteShoppingList(Long shoppingListId) {
+    @DeleteMapping("/delete/{shoppingListId}")
+    public void deleteShoppingList(@PathVariable Long shoppingListId) {
         shoppingListRepository.deleteById(shoppingListId);
     }
 

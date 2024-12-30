@@ -32,7 +32,6 @@ public class IngredientController {
     @GetMapping("/{ingredientId}")
     public ResponseEntity<Optional<Ingredient>> getSavedIngredient(@PathVariable("ingredientId") Long ingredientId) {
         logger.info("In getSavedIngredient...");
-
         if (ingredientRepository.existsById(ingredientId)) {
             logger.info("Ingredient with ID {} found...", ingredientId);
             return ResponseEntity.ok(ingredientRepository.findById(ingredientId));

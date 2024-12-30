@@ -18,7 +18,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173")
 public class MealPlanController {
 
-    Logger logger = LoggerFactory.getLogger(IngredientController.class);
+    Logger logger = LoggerFactory.getLogger(MealPlanController.class);
 
     @Autowired
     private MealPlanRepository mealPlanRepository;
@@ -66,7 +66,7 @@ public class MealPlanController {
 
     @DeleteMapping("/delete/{mealPlanId}")
     public ResponseEntity<Object> deleteMealPlan(@PathVariable("mealPlanId") Long mealPlanId) {
-        logger.info("In deleteIngredient...");
+        logger.info("In deleteMealPlan...");
         if (mealPlanRepository.existsById(mealPlanId)) {
             logger.info("MealPlan with ID {} found.  Deleting...", mealPlanId);
             mealPlanRepository.deleteById(mealPlanId);

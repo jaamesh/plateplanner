@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Button from "./Button";
 import RecipeCards from './RecipeCards.jsx';
 
 const RecipeList = () => {
@@ -28,6 +29,14 @@ const RecipeList = () => {
         return <p>Error: {error}</p>;
     }
 
+    function handleSaveRecipe(recipeId) {
+        //call API using axios here
+    }
+
+    function handleAddRecipeToMealPlan(recipeId) {
+        //open a modal, allow user to select meal plan or create new meal plan, call API
+    }
+
     return (
         <div>
             <RecipeCards recipes={recipes} />
@@ -37,9 +46,9 @@ const RecipeList = () => {
                 <div key={recipe.id} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>
                     <p>{recipe.description}</p>
-                    <img src={recipe.imageURL} alt={recipe.name + " image"} className='card-img-top mx-auto d-block w-25'/>
+                    <img src={recipe.imageURL} alt={recipe.name + " image"} className='card-img mx-auto d-block w-25'/>
                     <h3>Ingredients:</h3>
-                    <ul>
+                    <ul className="list-unstyled">
                         {recipe.recipeIngredients.map((ingredient) => (
                             <li key={ingredient.id}>
                                 {ingredient.quantity} {ingredient.unit} {ingredient.ingredient.name}
@@ -48,7 +57,17 @@ const RecipeList = () => {
                     </ul>
                     <h3>Instructions:</h3>
                     <p>{recipe.instructions}</p>
+                    <div className="container">
+                        <div className="row justify-content-around">
+                            <div className="col-4">
+                                <Button label="Save Recipe" onClick={handleSaveRecipe(recipe.id)}/>
+                            </div>
+                            <div className="col-4">
+                                <Button label="Add to Meal Plan" onClick={handleAddRecipeToMealPlan(recipe.id)}/>
+                            </div>
+                        </div>
                     </div>
+                </div>
             ))}
         */}
         </div>

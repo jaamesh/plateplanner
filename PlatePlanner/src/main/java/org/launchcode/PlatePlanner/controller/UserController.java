@@ -3,7 +3,10 @@ package org.launchcode.PlatePlanner.controller;
 import jakarta.validation.Valid;
 import org.launchcode.PlatePlanner.model.User;
 import org.launchcode.PlatePlanner.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,41 +18,64 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
+    Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserRepository userRepository;
 
 
     @GetMapping("/all")
-    public List<User> getAllSavedUsers() {
-        return (List<User>) userRepository.findAll();
+    public ResponseEntity<List<User>> getAllSavedUsers() {
+        logger.info("In getAllSavedUsers...");
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     @GetMapping("/{userId}")
-    public Optional<User> getSavedUser(@PathVariable Long userId) {
-        return userRepository.findById(userId);
+    public ResponseEntity<Optional<User>> getSavedUser(@PathVariable("userId") Long userId) {
+        logger.info("In getSavedUser...");
+        if (userRepository.existsById(userId)) {
+            logger.info("User with ID {} found...", userId);
+            return ResponseEntity.ok(userRepository.findById(userId));
+        } else {
+            logger.warn("User with ID {} not found...", userId);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/create")
-    public User createUser(@RequestBody @Valid User user, Errors errors) {
-//        TODO: replace this line with appropriate User methods
-        if(errors.hasErrors()) {
-            System.out.println(errors);
+    public ResponseEntity<Object> createUser(@RequestBody @Valid User user, Errors errors) {
+        logger.info("In createUser...");
+        userRepository.save(user);
+        if (errors.hasErrors()) {
+            logger.error("Error creating user: {}", errors);
         }
-        return userRepository.save(user);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/update/{userId}")
-    public void updateUser(@PathVariable Long userId, @RequestBody @Valid User user) {
+    public ResponseEntity<Object> updateUser(@PathVariable("userId") Long userId, @RequestBody @Valid User user) {
+        logger.info("In updateUser...");
         if (userRepository.existsById(userId)) {
+            logger.info("User with ID {} found.  Updating...", userId);
             userRepository.save(user);
+            return ResponseEntity.noContent().build();
         } else {
-//            TODO: throw error;
+            logger.warn("User with ID {} not found...", userId);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/delete/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
-        userRepository.deleteById(userId);
+    public ResponseEntity<Object> deleteUser(@PathVariable("userId") Long userId) {
+        logger.info("In deleteUser...");
+        if (userRepository.existsById(userId)) {
+            logger.info("User with ID {} found.  Deleting...", userId);
+            userRepository.deleteById(userId);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.warn("User with ID {} not found...", userId);
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

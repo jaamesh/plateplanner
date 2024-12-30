@@ -1,13 +1,15 @@
 package org.launchcode.PlatePlanner.controller;
 
 
+import jakarta.validation.Valid;
 import org.launchcode.PlatePlanner.model.Recipe;
-import org.launchcode.PlatePlanner.repository.RecipeIngredientRepository;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("recipes")
@@ -20,13 +22,33 @@ public class RecipeController {
 
     @GetMapping
     public List<Recipe> getAllSavedRecipes() {
-        List<Recipe> savedRecipesList = (List<Recipe>) recipeRepository.findAll();
-        return savedRecipesList;
+        return (List<Recipe>) recipeRepository.findAll();
     }
 
-    @PostMapping
-    public Recipe createRecipe(@RequestBody Recipe recipe) {
+    @GetMapping
+    public Optional<Recipe> getSavedRecipe(Long recipeId) {
+        return recipeRepository.findById(recipeId);
+    }
+
+    @PostMapping()
+    public Recipe createRecipe(@RequestBody @Valid Recipe recipe, Errors errors) {
         recipe.assignToIngredients();
         return recipeRepository.save(recipe);
     }
+
+    @PostMapping()
+    public void updateRecipe(@RequestBody @Valid Recipe recipe) {
+        if (recipeRepository.existsById(recipe.getId())) {
+            recipe.assignToIngredients();
+            recipeRepository.save(recipe);
+        } else {
+//            TODO: throw error;
+        }
+    }
+
+    @DeleteMapping
+    public void deleteRecipe(Long recipeId) {
+        recipeRepository.deleteById(recipeId);
+    }
+
 }

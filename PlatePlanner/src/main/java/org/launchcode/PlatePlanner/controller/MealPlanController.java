@@ -46,7 +46,7 @@ public class MealPlanController {
         logger.info("In createMealPlan...");
         mealPlanRepository.save(mealPlan);
         if (errors.hasErrors()) {
-            logger.error("Error creating meal plan: {}", errors);
+            logger.error("Error creating mealPlan: {}", errors);
         }
         return ResponseEntity.noContent().build();
     }

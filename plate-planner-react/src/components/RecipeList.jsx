@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "./Button";
+import RecipeCards from './RecipeCards.jsx';
 
 const RecipeList = () => {
     const [recipes, setRecipes] = useState([]);
@@ -38,6 +39,8 @@ const RecipeList = () => {
 
     return (
         <div>
+            <RecipeCards recipes={recipes} />
+         {/*
             <h1>Recipes</h1>
             {recipes.map((recipe) => (
                 <div key={recipe.id} className="card">
@@ -66,6 +69,7 @@ const RecipeList = () => {
                     </div>
                 </div>
             ))}
+        */}
         </div>
     );
 };

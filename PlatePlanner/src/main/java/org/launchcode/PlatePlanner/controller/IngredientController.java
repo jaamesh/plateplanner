@@ -18,33 +18,33 @@ public class IngredientController {
     @Autowired
     private IngredientRepository ingredientRepository;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Ingredient> getAllSavedIngredients() {
         return (List<Ingredient>) ingredientRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<Ingredient> getSavedIngredient(Long ingredientId) {
+    @GetMapping("/{ingredientId}")
+    public Optional<Ingredient> getSavedIngredient(@PathVariable Long ingredientId) {
         return ingredientRepository.findById(ingredientId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public Ingredient createIngredient(@RequestBody @Valid Ingredient ingredient, Errors errors) {
 //      TODO: replace this line with appropriate Ingredient methods
         return ingredientRepository.save(ingredient);
     }
 
-    @PostMapping()
-    public void updateIngredient(@RequestBody @Valid Ingredient ingredient) {
-        if (ingredientRepository.existsById(ingredient.getId())) {
+    @PostMapping("/update/{ingredientId}")
+    public void updateIngredient(@PathVariable Long ingredientId, @RequestBody @Valid Ingredient ingredient) {
+        if (ingredientRepository.existsById(ingredientId)) {
             ingredientRepository.save(ingredient);
         } else {
 //            TODO: throw error;
         }
     }
 
-    @DeleteMapping
-    public void deleteIngredient(Long ingredientId) {
+    @DeleteMapping("/delete/{ingredientId}")
+    public void deleteIngredient(@PathVariable Long ingredientId) {
         ingredientRepository.deleteById(ingredientId);
     }
 

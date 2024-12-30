@@ -1,7 +1,6 @@
 package org.launchcode.PlatePlanner.controller;
 
 import jakarta.validation.Valid;
-import org.launchcode.PlatePlanner.model.ShoppingList;
 import org.launchcode.PlatePlanner.model.ShoppingListItem;
 import org.launchcode.PlatePlanner.repository.ShoppingListItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,34 +11,34 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("shoppingListItem")
+@RequestMapping("shopping-list-item")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ShoppingListItemController {
 
     @Autowired
     private ShoppingListItemRepository shoppingListItemRepository;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<ShoppingListItem> getAllShoppingListItems() {
         return (List<ShoppingListItem>) shoppingListItemRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<ShoppingListItem> getSavedShoppingListItem(Long shoppingListItemId) {
+    @GetMapping("/{shoppingListItemId}")
+    public Optional<ShoppingListItem> getSavedShoppingListItem(@PathVariable Long shoppingListItemId) {
         return shoppingListItemRepository.findById(shoppingListItemId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ShoppingListItem createShoppingListItem(@RequestBody @Valid ShoppingListItem shoppingListItem, Errors errors) {
-//        TODO: replace this line with appropriate ShoppingListItem logic
+//        TODO: replace this line with appropriate ShoppingList logic
         if(errors.hasErrors()) {
             System.out.println(errors);
         }
         return shoppingListItemRepository.save(shoppingListItem);
     }
 
-    @PostMapping()
-    public void updateShoppingListItem(@RequestBody @Valid ShoppingListItem shoppingListItem, Long shoppingListItemId) {
+    @PostMapping("/update/{shoppingListItemId}")
+    public void updateShoppingListItem(@PathVariable Long shoppingListItemId, @RequestBody @Valid ShoppingListItem shoppingListItem) {
         if (shoppingListItemRepository.existsById(shoppingListItemId)) {
             shoppingListItemRepository.save(shoppingListItem);
         } else {
@@ -47,10 +46,9 @@ public class ShoppingListItemController {
         }
     }
 
-    @DeleteMapping
-    public void deleteShoppingListItem(Long shoppingListItemId) {
+    @DeleteMapping("/delete/{shoppingListItemId}")
+    public void deleteShoppingListItem(@PathVariable Long shoppingListItemId) {
         shoppingListItemRepository.deleteById(shoppingListItemId);
     }
-
 
 }

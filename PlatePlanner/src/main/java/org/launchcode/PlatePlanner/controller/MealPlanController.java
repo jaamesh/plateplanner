@@ -11,40 +11,40 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("mealPlan")
+@RequestMapping("meal-plan")
 @CrossOrigin(origins = "http://localhost:5173")
 public class MealPlanController {
 
     @Autowired
     private MealPlanRepository mealPlanRepository;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<MealPlan> getAllSavedMealPlans() {
         return (List<MealPlan>) mealPlanRepository.findAll();
     }
 
-    @GetMapping
-    public Optional<MealPlan> getSavedMealPlan(Long mealPlanId) {
+    @GetMapping("/{mealPlanId}")
+    public Optional<MealPlan> getSavedMealPlan(@PathVariable Long mealPlanId) {
         return mealPlanRepository.findById(mealPlanId);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public MealPlan createMealPlan(@RequestBody @Valid MealPlan mealPlan, Errors errors) {
 //      TODO: replace this line with appropriate MealPlan methods
         return mealPlanRepository.save(mealPlan);
     }
 
-    @PostMapping()
-    public void updateMealPlan(@RequestBody @Valid MealPlan mealPlan) {
-        if (mealPlanRepository.existsById(mealPlan.getId())) {
+    @PostMapping("/update/{mealPlanId}")
+    public void updateMealPlan(@PathVariable Long mealPlanId, @RequestBody @Valid MealPlan mealPlan) {
+        if (mealPlanRepository.existsById(mealPlanId)) {
             mealPlanRepository.save(mealPlan);
         } else {
 //            TODO: throw error;
         }
     }
 
-    @DeleteMapping
-    public void deleteMealPlan(Long mealPlanId) {
+    @DeleteMapping("/delete/{mealPlanId}")
+    public void deleteMealPlan(@PathVariable Long mealPlanId) {
         mealPlanRepository.deleteById(mealPlanId);
     }
 

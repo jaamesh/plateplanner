@@ -3,7 +3,10 @@ package org.launchcode.PlatePlanner.controller;
 import jakarta.validation.Valid;
 import org.launchcode.PlatePlanner.model.Tag;
 import org.launchcode.PlatePlanner.repository.TagRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,39 +18,63 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173")
 public class TagController {
 
+    Logger logger = LoggerFactory.getLogger(TagController.class);
+
     @Autowired
     private TagRepository tagRepository;
 
     @GetMapping("/all")
-    public List<Tag> getAllTags() {
-        return (List<Tag>) tagRepository.findAll();
+    public ResponseEntity<List<Tag>> getAllSavedTags() {
+        logger.info("In getAllSavedTags...");
+        return ResponseEntity.ok(tagRepository.findAll());
     }
 
     @GetMapping("/{tagId}")
-    public Optional<Tag> getSavedTags(@PathVariable Long tagId) {
-        return tagRepository.findById(tagId);
+    public ResponseEntity<Optional<Tag>> getSavedTag(@PathVariable("tagId") Long tagId) {
+        logger.info("In getSavedTag...");
+        if (tagRepository.existsById(tagId)) {
+            logger.info("Tag with ID {} found...", tagId);
+            return ResponseEntity.ok(tagRepository.findById(tagId));
+        } else {
+            logger.warn("Tag with ID {} not found...", tagId);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/create")
-    public Tag createTag(@RequestBody @Valid Tag tag, Errors errors) {
-        if(errors.hasErrors()) {
-            System.out.println(errors);
+    public ResponseEntity<Object> createTag(@RequestBody @Valid Tag tag, Errors errors) {
+        logger.info("In createTag...");
+        tagRepository.save(tag);
+        if (errors.hasErrors()) {
+            logger.error("Error creating tag: {}", errors);
         }
-        return tagRepository.save(tag);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/update/{tagId}")
-    public void updateTag(@PathVariable Long tagId, @RequestBody @Valid Tag tag) {
+    public ResponseEntity<Object> updateTag(@PathVariable("tagId") Long tagId, @RequestBody @Valid Tag tag) {
+        logger.info("In updateTag...");
         if (tagRepository.existsById(tagId)) {
+            logger.info("Tag with ID {} found.  Updating...", tagId);
             tagRepository.save(tag);
+            return ResponseEntity.noContent().build();
         } else {
-//            TODO: throw error;
+            logger.warn("Tag with ID {} not found...", tagId);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/delete/{tagId}")
-    public void deleteTag(@PathVariable Long tagId) {
-        tagRepository.deleteById(tagId);
+    public ResponseEntity<Object> deleteTag(@PathVariable("tagId") Long tagId) {
+        logger.info("In deleteTag...");
+        if (tagRepository.existsById(tagId)) {
+            logger.info("Tag with ID {} found.  Deleting...", tagId);
+            tagRepository.deleteById(tagId);
+            return ResponseEntity.noContent().build();
+        } else {
+            logger.warn("Tag with ID {} not found...", tagId);
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

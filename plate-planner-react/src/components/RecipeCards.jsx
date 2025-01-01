@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Button from "./Button";
 
 function addTags(recipeId) {
     alert("add Tag to recipeId: " + recipeId);
@@ -39,6 +40,16 @@ function RecipeCards(props) {
                     </ul>
                     <h3>Instructions:</h3>
                     <p>{recipe.instructions}</p>
+                    <div className="container">
+                        <div className="row justify-content-around">
+                            <div className="col-4">
+                                <Button label="Save Recipe" onClick={() => handleSaveRecipe(recipe.id)}/>
+                            </div>
+                            <div className="col-4">
+                                <Button label="Add to Meal Plan" onClick={() => handleAddRecipeToMealPlan(recipe.id)}/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             ))}
         </div>

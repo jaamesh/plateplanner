@@ -38,6 +38,7 @@ const RecipeList = () => {
 
     return (
         <div>
+            <h2>Saved Recipes</h2>
             <RecipeCards recipes={recipes} />
          {/*
             <h1>Recipes</h1>

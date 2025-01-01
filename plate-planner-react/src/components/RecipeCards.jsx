@@ -10,6 +10,14 @@ function saveRecipe(recipeId) {
     alert("save Recipe recipeId: " + recipeId);
 };
 
+function handleSaveRecipe(recipeId) {
+    console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
+}
+
+function handleAddRecipeToMealPlan(recipeId) {
+    //open a modal, allow user to select meal plan or create new meal plan, call API
+    console.log("Recipe with ID (" + recipeId + ") saved to Meal Plan!" )
+}
 
 function RecipeCards(props) {
 

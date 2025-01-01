@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import mealPlanService from "@/services/mealPlanService.js";
 
 const MealPlanUI = () => {
     const [mealPlans, setMealPlans] = useState([]);
@@ -8,8 +9,7 @@ const MealPlanUI = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:8080/mealplans")
+        mealPlanService.getAll()
             .then((response) => {
                 setMealPlans(response.data);
                 setLoading(false);
@@ -20,7 +20,7 @@ const MealPlanUI = () => {
             });
     }, []);
 
-    return 
+    return
     <div>
         <h2 className="mealplan-header">Meal Plans</h2>
         <label for="mealPlans">Select a Meal Plan:</label>

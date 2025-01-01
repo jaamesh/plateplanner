@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Button from "./Button";
 import RecipeCards from './RecipeCards.jsx';
+import recipeService from "@/services/recipeService.js";
 
 const RecipeList = () => {
     const [recipes, setRecipes] = useState([]);
@@ -9,9 +9,8 @@ const RecipeList = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:8080/recipes")
-            .then((response) => { 
+        recipeService.getAll()
+            .then((response) => {
                 setRecipes(response.data);
                 setLoading(false);
             })

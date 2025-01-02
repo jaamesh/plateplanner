@@ -1,12 +1,15 @@
-
+import NavSearch from "./NavSearch";
+import { Link } from 'react-router-dom';
 
 const Nav = () => {
     return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="nav-link" href="#">Home</a>
-        <a className="nav-link" href="#">My Recipes</a>
-        <a className="nav-link" href="#">My Meal Plans</a>
-        <a className="nav-link" href="#">My Shopping Lists</a>
+        <Link className="nav-link" to="/">Find Recipes</Link>
+        <Link className="nav-link" to="/my-recipes">Saved Recipes</Link>
+        <Link className="nav-link" to="/meal-plans">Meal Plans</Link>
+        <Link className="nav-link" to="/shopping-lists">Shopping Lists</Link>
+        <Link className="nav-link" to="/profile">Profile</Link>
+        <Link className="nav-link" to="/logout">Log Out</Link>
     </nav>
     );
 }

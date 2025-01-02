@@ -20,16 +20,17 @@ const MealPlanUI = () => {
             });
     }, []);
 
-    return
+    return (
     <div>
         <h2 className="mealplan-header">Meal Plans</h2>
-        <label for="mealPlans">Select a Meal Plan:</label>
+        {/* <label for="mealPlans">Select a Meal Plan:</label>
         <select name="mealPlans" id="mealPlans">
             {mealPlans.map((mealPlan) => (
             <div key={mealplan.id} className="dropdown"></div>
             )}
-        </select>
+        </select> */}
     </div>
+    )
 }
 
 export default MealPlanUI

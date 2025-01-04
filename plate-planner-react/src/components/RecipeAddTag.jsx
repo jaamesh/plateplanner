@@ -9,6 +9,8 @@ import {
   MDBModalBody,
   MDBModalFooter,
 } from 'mdb-react-ui-kit';
+import Button from "./Button";
+
 
 export default function App(props) {
   const [basicModal, setBasicModal] = useState(false);
@@ -17,7 +19,7 @@ export default function App(props) {
 
   return (
     <>
-      <MDBBtn onClick={toggleOpen}>Jim's LAUNCH DEMO MODAL</MDBBtn>
+      <Button label="Add Tag" onClick={toggleOpen} />
       <MDBModal open={basicModal} onClose={() => setBasicModal(false)} tabIndex='-1'>
         <MDBModalDialog>
           <MDBModalContent>
@@ -25,7 +27,21 @@ export default function App(props) {
               <MDBModalTitle>Modal title</MDBModalTitle>
               <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
             </MDBModalHeader>
-            <MDBModalBody>Add tag to recipe ID: {props.recipeId}</MDBModalBody>
+
+            <MDBModalBody>
+                Add tag to recipe ID: {props.recipeId}<br/>
+                    <label>
+                        Tag to Add:
+                    </label><br/>
+                    Now<br/>
+                    is<br/>
+                    the<br/>
+                    time<br/>
+                    for<br/>
+                    all<br/>
+                    good<br/>
+                    <button type="submit">Submit</button>
+            </MDBModalBody>
 
             <MDBModalFooter>
               <MDBBtn color='secondary' onClick={toggleOpen}>

@@ -14,9 +14,10 @@ import Button from "./Button";
 
 export default function App(props) {
     const [basicModal, setBasicModal] = useState(false);
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [tagSaved, setTagSaved] = useState(false);
+
 
     const toggleOpen = () => {
         setBasicModal(!basicModal);
@@ -25,7 +26,13 @@ export default function App(props) {
     }
 
     const tagRecipe = () => {
-        setTagSaved(true);
+        setLoading(true);
+        const timeout = setTimeout(() => {
+            setLoading(false);
+            //setTagSaved(true);
+            setError("There was a problem connecting to the database.  Please try again later.");
+        }, 3000);
+        
     };
 
     const handleSubmit = (e) => {
@@ -43,14 +50,6 @@ export default function App(props) {
         });
     };
 
-    if (loading) {
-        return <p>Loading recipes...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
-
     return (
         <>
             <Button label="Add Tag" onClick={toggleOpen} />
@@ -63,7 +62,7 @@ export default function App(props) {
                         </MDBModalHeader>
 
                         <MDBModalBody>
-                            {!tagSaved &&
+                            {!tagSaved && !loading && error == null &&
                                 <div>
                                     Add tag to recipe ID: {props.recipeId}<br/>
                                     <label>
@@ -81,11 +80,17 @@ export default function App(props) {
                             {tagSaved &&
                                 <div>Tag saved successfully!</div>
                             }
+                            {loading &&
+                                <div>Saving tag...</div>
+                            }
+                            {error != null &&
+                                <div>{error}</div>
+                            }
                        </MDBModalBody>
 
                         <MDBModalFooter>
                             <Button label="Close" onClick={toggleOpen} />
-                            {!tagSaved &&
+                            {!tagSaved && !loading && error == null &&
                                 <Button label="Tag Recipe" onClick={tagRecipe}/>
                             }      
                         </MDBModalFooter>

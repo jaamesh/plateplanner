@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "./Button";
+import RecipeAddTag from "./RecipeAddTag";
 
 function addTags(recipeId) {
     alert("add Tag to recipeId: " + recipeId);
+    return (<RecipeAddTag recipeId={recipeId} />);
 };
 
 function saveRecipe(recipeId) {
@@ -32,7 +34,7 @@ function RecipeCards(props) {
                     <h2 className='card-title'>{recipe.name}</h2>
                     <p>{recipe.description}</p>
                     {recipe.id != null &&
-                    <p><input type="button" value="Add Tag" onClick={() => addTags(recipe.id)}/></p>
+                    <RecipeAddTag recipeId={recipe.id} />
                     }
                     {recipe.id == null &&
                     <p><input type="button" value="Save Recipe" onClick={() => saveRecipe(recipe.id)}/></p>

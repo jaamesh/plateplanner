@@ -101,7 +101,7 @@ public class MealPlanController {
         return ResponseEntity.ok(mealPlans);
     }
 
-    //POST Create new meal plan
+    //POST Create new user meal plan
     @PostMapping("/user/{userId}")
     public ResponseEntity<MealPlan> createUserMealPlan(@PathVariable("userId") Long userId, @Valid @RequestBody MealPlan newMealPlan, Errors errors) {
         logger.info("In createUserMealPlan...");

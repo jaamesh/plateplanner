@@ -59,6 +59,7 @@ public class User extends AbstractEntity {
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.role = Role.USER;
     }
 
     public String getUsername() {

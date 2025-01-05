@@ -43,6 +43,12 @@ public class User extends AbstractEntity {
 
     public User() {}
 
+//    James will update this:
+//    public User() {
+//        super();
+//        ;
+//    }
+
     public User(String username, String password, String email, Role role) {
         this.username = username;
         this.password = password;

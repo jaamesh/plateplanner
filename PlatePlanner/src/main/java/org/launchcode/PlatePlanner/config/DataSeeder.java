@@ -2,19 +2,21 @@ package org.launchcode.PlatePlanner.config;
 
 import org.launchcode.PlatePlanner.model.*;
 import org.launchcode.PlatePlanner.repository.IngredientRepository;
+import org.launchcode.PlatePlanner.repository.MealPlanRepository;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashSet;
+import java.util.*;
+
 
 @Configuration
 public class DataSeeder {
 
     @Bean
-    public ApplicationRunner seedData(UserRepository userRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
+    public ApplicationRunner seedData(UserRepository userRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, MealPlanRepository mealPlanRepository) {
         return args -> {
 
             System.out.println("DataSeeder is running...");
@@ -110,6 +112,34 @@ public class DataSeeder {
                 ingredientRepository.save(cheddarCheese);
                 System.out.println("Recipe 2 saved.");
             }
+
+            if (mealPlanRepository.count() == 0) {
+                System.out.println("Seeding meal plan");
+
+                Optional<User> optionalUser = userRepository.findById(1L);
+
+                if (optionalUser.isEmpty()) {
+                    throw new RuntimeException("User not found");
+                }
+
+                User user1 = optionalUser.get();
+
+                List<Recipe> recipeSet = new ArrayList<>(recipeRepository.findAll());
+
+                if (recipeSet.isEmpty()) {
+                    throw new RuntimeException("Recipes not found");
+                }
+
+                MealPlan testMealPlan = new MealPlan(user1, "Test Meal Plan");
+                testMealPlan.setRecipes(recipeSet);
+
+                System.out.println("Meal plan (" + testMealPlan.toString() + ") created and recipes added. Now saving meal plan to database.");
+
+                mealPlanRepository.save(testMealPlan);
+
+                System.out.println("Meal plan saved.");
+            }
+
         };
     }
 }

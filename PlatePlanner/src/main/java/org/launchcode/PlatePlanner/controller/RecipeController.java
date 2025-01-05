@@ -2,8 +2,11 @@ package org.launchcode.PlatePlanner.controller;
 
 
 import jakarta.validation.Valid;
+import org.launchcode.PlatePlanner.model.MealPlan;
 import org.launchcode.PlatePlanner.model.Recipe;
+import org.launchcode.PlatePlanner.model.Tag;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
+import org.launchcode.PlatePlanner.repository.TagRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class RecipeController {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<Recipe>> getAllSavedRecipes() {
@@ -79,6 +84,37 @@ public class RecipeController {
             logger.warn("Recipe with ID {} not found...", recipeId);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //Perhaps we don't need tags to be user specific
+
+    //Add tag to recipe by ID
+    @PutMapping("/{recipeId}/add-tag/{tagId}")
+    public ResponseEntity<Recipe> addTagToRecipe(@PathVariable("tagId") Long tagId, @PathVariable("recipeId") Long recipeId) {
+        logger.info("In addTagToRecipe...");
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
+            logger.warn("Recipe with ID {} not found...", recipeId);
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("Recipe with ID {} found...", recipeId);
+        Recipe recipe = optionalRecipe.get();
+
+        Optional<Tag> optionalTag = tagRepository.findById(tagId);
+        if (optionalTag.isEmpty()) {
+            logger.warn("Tag with ID {} not found...", tagId);
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("Tag with ID {} found...", tagId);
+        Tag tag = optionalTag.get();
+
+        recipe.addTag(tag);
+
+        Recipe updatedRecipe = recipeRepository.save(recipe);
+
+        return ResponseEntity.ok(updatedRecipe);
     }
 
 }

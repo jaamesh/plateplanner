@@ -124,7 +124,7 @@ public class MealPlanController {
 
     //Add recipe to meal plan by ID
     @PutMapping("/{mealPlanId}/add-recipe/{recipeId}")
-    public ResponseEntity<MealPlan> addRecipeToMealPlan(@PathVariable("userId") Long mealPlanId, @PathVariable("recipeId") Long recipeId) {
+    public ResponseEntity<MealPlan> addRecipeToMealPlan(@PathVariable("recipeId") Long recipeId, @PathVariable("mealPlanId") Long mealPlanId) {
         logger.info("In addRecipeToMealPlan...");
         Optional<MealPlan> optionalMealPlan = mealPlanRepository.findById(mealPlanId);
         if (optionalMealPlan.isEmpty()) {

@@ -3,6 +3,7 @@ package org.launchcode.PlatePlanner.config;
 import org.launchcode.PlatePlanner.model.*;
 import org.launchcode.PlatePlanner.repository.IngredientRepository;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
+import org.launchcode.PlatePlanner.repository.TagRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +15,28 @@ import java.util.HashSet;
 public class DataSeeder {
 
     @Bean
-    public ApplicationRunner seedData(UserRepository userRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
+    public ApplicationRunner seedData(UserRepository userRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, TagRepository tagRepository) {
         return args -> {
 
             System.out.println("DataSeeder is running...");
+
+            if (tagRepository.count() < 5) {
+                System.out.println("Seeding tag data...");
+
+                Tag tag1 = new Tag("Vegan", "Veganism is both the practice of abstaining from the use of animal products, particularly in diet.");
+                Tag tag2 = new Tag("Vegetarian", "Vegetarianism is the practice of abstaining from the consumption of meat (red meat, poultry, seafood, and the flesh of any other animal).");
+                Tag tag3 = new Tag("Dessert", "Dessert is a course that concludes a meal. The course usually consists of sweet foods, such as confections dishes or fruit.");
+                Tag tag4 = new Tag("Side", "A side dish, sometimes referred to as a side order, side item, or simply a side, is a food item that accompanies the entrée or main course at a meal.");
+                Tag tag5 = new Tag("Seafood", "Seafood is any form of sea life regarded as food by humans. Seafood prominently includes fish and shellfish.");
+
+                tagRepository.save(tag1);
+                tagRepository.save(tag2);
+                tagRepository.save(tag3);
+                tagRepository.save(tag4);
+                tagRepository.save(tag5);
+
+                System.out.println("Tags data saved.");
+            }
 
             if (userRepository.count() == 0) {
                 System.out.println("Seeding user data...");

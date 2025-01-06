@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,31 +87,29 @@ public class RecipeController {
         }
     }
 
-    //Perhaps we don't need tags to be user specific
-
-    //Add tag to recipe by ID
-    @PutMapping("/{recipeId}/add-tag/{tagId}")
-    public ResponseEntity<Recipe> addTagToRecipe(@PathVariable("tagId") Long tagId, @PathVariable("recipeId") Long recipeId) {
-        logger.info("In addTagToRecipe...");
+    //Add tags to recipe by ID
+    @PutMapping("/add-tags/{recipeId}")
+    public ResponseEntity<Recipe> addTagsToRecipe(@PathVariable("recipeId") Long recipeId, @RequestBody @Valid List<Long> tagIds) {
+        logger.info("In addTagsToRecipe...");
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if (optionalRecipe.isEmpty()) {
             logger.warn("Recipe with ID {} not found...", recipeId);
             return ResponseEntity.notFound().build();
         }
 
-        logger.info("Recipe with ID {} found...", recipeId);
         Recipe recipe = optionalRecipe.get();
 
-        Optional<Tag> optionalTag = tagRepository.findById(tagId);
-        if (optionalTag.isEmpty()) {
-            logger.warn("Tag with ID {} not found...", tagId);
+        List<Tag> tags = tagRepository.findAllById(tagIds);
+        if (tags.isEmpty()) {
+            logger.warn("Tag(s) with ID(s) {} not found...", tagIds);
             return ResponseEntity.notFound().build();
         }
 
-        logger.info("Tag with ID {} found...", tagId);
-        Tag tag = optionalTag.get();
+        logger.info("Tag(s) with ID(s) {} found...", tagIds);
 
-        recipe.addTag(tag);
+        for (Tag tag : tags) {
+            recipe.addTag(tag);
+        }
 
         Recipe updatedRecipe = recipeRepository.save(recipe);
 

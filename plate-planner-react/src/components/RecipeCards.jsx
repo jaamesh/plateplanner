@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Button from "./Button";
 import RecipeAddTag from "./RecipeAddTag";
-import AddRecipeToMealPlan from "./RecipeAddToMealPlan";
+import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
 
 function addTags(recipeId) {
     alert("add Tag to recipeId: " + recipeId);

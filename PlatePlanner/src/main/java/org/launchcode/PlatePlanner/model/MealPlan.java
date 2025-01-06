@@ -1,5 +1,6 @@
 package org.launchcode.PlatePlanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -13,6 +14,7 @@ public class MealPlan extends AbstractEntity {
 
     @ManyToOne
     @NotNull
+    @JsonIgnoreProperties({"mealPlans"})
     private User user;
 
     @ManyToMany

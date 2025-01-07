@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Button from "./Button";
 import RecipeAddTag from "./RecipeAddTag";
+import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
 
 function handleSaveRecipe(recipeId) {
     console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
@@ -44,7 +44,7 @@ function RecipeCards(props) {
                         }
                         {recipe.id != null &&
                             <div className="col-4">
-                                <Button label="Add to Meal Plan" onClick={() => handleAddRecipeToMealPlan(recipe.id)}/>
+                                <AddRecipeToMealPlan recipeId={recipe.id} />
                             </div>
                         }
                         {recipe.id != null &&

@@ -18,7 +18,7 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/my-recipes" element={<RecipeList />} />
+        <Route path="/saved-recipes" element={<RecipeList />} />
         <Route path="/meal-plans" element={<MealPlanUI />} />
         <Route path="/shopping-lists" element={<ShoppingList />} />
         <Route path="/profile" element={<UserProfile />} />

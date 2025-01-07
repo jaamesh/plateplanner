@@ -1,10 +1,7 @@
 package org.launchcode.PlatePlanner.config;
 
 import org.launchcode.PlatePlanner.model.*;
-import org.launchcode.PlatePlanner.repository.IngredientRepository;
-import org.launchcode.PlatePlanner.repository.MealPlanRepository;
-import org.launchcode.PlatePlanner.repository.RecipeRepository;
-import org.launchcode.PlatePlanner.repository.UserRepository;
+import org.launchcode.PlatePlanner.repository.*;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +13,7 @@ import java.util.*;
 public class DataSeeder {
 
     @Bean
-    public ApplicationRunner seedData(UserRepository userRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, MealPlanRepository mealPlanRepository) {
+    public ApplicationRunner seedData(UserRepository userRepository, RecipeRepository recipeRepository, IngredientRepository ingredientRepository, MealPlanRepository mealPlanRepository, TagRepository tagRepository) {
         return args -> {
 
             System.out.println("DataSeeder is running...");

@@ -3,15 +3,6 @@ import Button from "./Button";
 import RecipeAddTag from "./RecipeAddTag";
 import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
 
-function addTags(recipeId) {
-    alert("add Tag to recipeId: " + recipeId);
-    return (<RecipeAddTag recipeId={recipeId} />);
-};
-
-function saveRecipe(recipeId) {
-    alert("save Recipe recipeId: " + recipeId);
-};
-
 function handleSaveRecipe(recipeId) {
     console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
 }
@@ -58,7 +49,7 @@ function RecipeCards(props) {
                         }
                         {recipe.id != null &&
                             <div className="col-4">
-                                <RecipeAddTag recipeId={recipe.id} />
+                                <RecipeAddTag recipe={recipe} />
                             </div>
                         }
                  </div>

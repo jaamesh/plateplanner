@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("meal-plan")
@@ -96,9 +98,16 @@ public class MealPlanController {
             logger.warn("User with ID {} not found...", userId);
             return ResponseEntity.notFound().build();
         }
-//        List<MealPlan> mealPlans = mealPlanRepository.findByUserId(userId);
-        List<MealPlan> mealPlans = mealPlanRepository.findAll();
-        return ResponseEntity.ok(mealPlans);
+
+        User user = optionalUser.get();
+
+        Set<MealPlan> mealPlanSet = user.getMealPlans();
+        if(mealPlanSet.isEmpty()) {
+            logger.warn("No MealPlan(s) found for user with ID {}...", userId);
+        }
+
+        List<MealPlan> mealPlanList = new ArrayList<>(mealPlanSet);
+        return ResponseEntity.ok(mealPlanList);
     }
 
     //POST Create new user meal plan

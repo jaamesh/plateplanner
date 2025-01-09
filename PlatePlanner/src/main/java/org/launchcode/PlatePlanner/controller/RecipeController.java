@@ -2,7 +2,6 @@ package org.launchcode.PlatePlanner.controller;
 
 
 import jakarta.validation.Valid;
-import org.launchcode.PlatePlanner.model.MealPlan;
 import org.launchcode.PlatePlanner.model.Recipe;
 import org.launchcode.PlatePlanner.model.Tag;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

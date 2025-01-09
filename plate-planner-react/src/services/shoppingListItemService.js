@@ -7,10 +7,10 @@ import httpClient from "./axiosConfig.js";
  * call any of the methods defined below.
  *
  * * `shoppingListItemService.getAll()` will return a list of all shopping-list-items.
- * * `shoppingListItemService.getById(id)` will return the shopping-list-item with the specified ID.
+ * * `shoppingListItemService.getById(shoppingListItemId)` will return the shopping-list-item with the specified ID.
  * * `shoppingListItemService.create(shoppingListItemObject)` will create a new shopping-list-item.
- * * `shoppingListItemService.update(id, shoppingListItemObject)` will update an existing shopping-list-item.
- * * `shoppingListItemService.delete(id)` will delete the shopping-list-item with the specified ID.
+ * * `shoppingListItemService.update(shoppingListItemId, shoppingListItemObject)` will update an existing shopping-list-item.
+ * * `shoppingListItemService.delete(shoppingListItemId)` will delete the shopping-list-item with the specified ID.
  */
 export default {
   /**
@@ -31,15 +31,15 @@ export default {
    * It will return a 200 response with the shopping-list-item object.
    * If no shopping-list-item is found with the specified ID, it will return a 404.
    *
-   * It hits the /shopping-list-item/{id} endpoint with a GET request.
+   * It hits the /shopping-list-item/{shoppingListItemId} endpoint with a GET request.
    *
    * To use it in a component, you would do something like this:
    * @example shoppingListItemService.getById(1).then((response) => console.log(response.data));
-   * @param {number} id The ID of the shopping-list-item to retrieve.
+   * @param {number} shoppingListItemId The ID of the shopping-list-item to retrieve.
    * @returns The ShoppingListItem object with the specified ID.
    */
-  getById(id) {
-    return httpClient.get(`/shopping-list-item/${id}`);
+  getById(shoppingListItemId) {
+    return httpClient.get(`/shopping-list-item/${shoppingListItemId}`);
   },
   /**
    * This is the POST service call to create a new shopping-list-item.
@@ -58,26 +58,26 @@ export default {
    * It will return a 204 (no content) response if the shopping-list-item is updated successfully.
    * It will return a 404 if no shopping-list-item is found with the specified ID.
    *
-   * It hits the /shopping-list-item/update/{id} endpoint with a POST request.
+   * It hits the /shopping-list-item/update/shoppingListItemId endpoint with a POST request.
    *
    * @example shoppingListItemService.update(1, shoppingListItemObject).then((response) => console.log(response.status));
-   * @param {number} id The ID of the shopping-list-item to update.
+   * @param {number} shoppingListItemId The ID of the shopping-list-item to update.
    * @param {object} shoppingListItemObject The ShoppingListItem object with updated information.
    */
-  update(id, shoppingListItemObject) {
-    return httpClient.post(`/shopping-list-item/update/${id}`, shoppingListItemObject);
+  update(shoppingListItemId, shoppingListItemObject) {
+    return httpClient.post(`/shopping-list-item/update/${shoppingListItemId}`, shoppingListItemObject);
   },
   /**
    * This is the DELETE service call to delete a shopping-list-item by its ID.
    * It will return a 204 (no content) response if the shopping-list-item is deleted successfully.
    * It will return a 404 if no shopping-list-item is found with the specified ID.
    *
-   * It hits the /shopping-list-item/delete/{id} endpoint with a DELETE request.
+   * It hits the /shopping-list-item/delete/{shoppingListItemId} endpoint with a DELETE request.
    *
    * @example shoppingListItemService.delete(1).then((response) => console.log(response.status));
-   * @param {number} id The ID of the shopping-list-item to delete.
+   * @param {number} shoppingListItemId The ID of the shopping-list-item to delete.
    */
-  delete(id) {
-    return httpClient.delete(`/shopping-list-item/delete/${id}`);
+  delete(shoppingListItemId) {
+    return httpClient.delete(`/shopping-list-item/delete/${shoppingListItemId}`);
   },
 };

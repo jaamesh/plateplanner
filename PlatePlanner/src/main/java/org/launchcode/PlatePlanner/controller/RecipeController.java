@@ -3,7 +3,9 @@ package org.launchcode.PlatePlanner.controller;
 
 import jakarta.validation.Valid;
 import org.launchcode.PlatePlanner.model.Recipe;
+import org.launchcode.PlatePlanner.model.Tag;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
+import org.launchcode.PlatePlanner.repository.TagRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class RecipeController {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
 
     @GetMapping("/all")
     public ResponseEntity<List<Recipe>> getAllSavedRecipes() {
@@ -79,6 +83,35 @@ public class RecipeController {
             logger.warn("Recipe with ID {} not found...", recipeId);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //Add tags to recipe by ID
+    @PutMapping("/add-tags/{recipeId}")
+    public ResponseEntity<Recipe> addTagsToRecipe(@PathVariable("recipeId") Long recipeId, @RequestBody @Valid List<Long> tagIds) {
+        logger.info("In addTagsToRecipe...");
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
+            logger.warn("Recipe with ID {} not found...", recipeId);
+            return ResponseEntity.notFound().build();
+        }
+
+        Recipe recipe = optionalRecipe.get();
+
+        List<Tag> tags = tagRepository.findAllById(tagIds);
+        if (tags.isEmpty()) {
+            logger.warn("Tag(s) with ID(s) {} not found...", tagIds);
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("Tag(s) with ID(s) {} found...", tagIds);
+
+        for (Tag tag : tags) {
+            recipe.addTag(tag);
+        }
+
+        Recipe updatedRecipe = recipeRepository.save(recipe);
+
+        return ResponseEntity.ok(updatedRecipe);
     }
 
 }

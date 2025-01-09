@@ -7,10 +7,11 @@ import httpClient from "./axiosConfig.js";
  * call any of the methods defined below.
  *
  * * `recipeService.getAll()` will return a list of all recipes.
- * * `recipeService.getById(id)` will return the recipe with the specified ID.
+ * * `recipeService.getById(recipeId)` will return the recipe with the specified ID.
  * * `recipeService.create(recipeObject)` will create a new recipe.
- * * `recipeService.update(id, recipeObject)` will update an existing recipe.
- * * `recipeService.delete(id)` will delete the recipe with the specified ID.
+ * * `recipeService.update(recipeId, recipeObject)` will update an existing recipe.
+ * * `recipeService.delete(recipeId)` will delete the recipe with the specified ID.
+ * * `recipeService.addTagsToRecipe(recipeId, tagIds)` will add one or more tags to the recipe with the specified ID.
  */
 export default {
   /**
@@ -31,15 +32,15 @@ export default {
    * It will return a 200 response with the recipe object.
    * If no recipe is found with the specified ID, it will return a 404.
    *
-   * It hits the /recipe/{id} endpoint with a GET request.
+   * It hits the /recipe/{recipeId} endpoint with a GET request.
    *
    * To use it in a component, you would do something like this:
    * @example recipeService.getById(1).then((response) => console.log(response.data));
-   * @param {number} id The ID of the recipe to retrieve.
+   * @param {number} recipeId The ID of the recipe to retrieve.
    * @returns The Recipe object with the specified ID.
    */
-  getById(id) {
-    return httpClient.get(`/recipe/${id}`);
+  getById(recipeId) {
+    return httpClient.get(`/recipe/${recipeId}`);
   },
   /**
    * This is the POST service call to create a new recipe.
@@ -58,26 +59,42 @@ export default {
    * It will return a 204 (no content) response if the recipe is updated successfully.
    * It will return a 404 if no recipe is found with the specified ID.
    *
-   * It hits the /recipe/update/{id} endpoint with a POST request.
+   * It hits the /recipe/update/{recipeId} endpoint with a POST request.
    *
    * @example recipeService.update(1, recipeObject).then((response) => console.log(response.status));
-   * @param {number} id The ID of the recipe to update.
+   * @param {number} recipeId The ID of the recipe to update.
    * @param {object} recipeObject The Recipe object with the updated values.
    */
-  update(id, recipeObject) {
-    return httpClient.post(`/recipe/update/${id}`, recipeObject);
+  update(recipeId, recipeObject) {
+    return httpClient.post(`/recipe/update/${recipeId}`, recipeObject);
   },
   /**
    * This is the DELETE service call to delete a recipe by its ID.
    * It will return a 204 (no content) response if the recipe is deleted successfully.
    * It will return a 404 if no recipe is found with the specified ID.
    *
-   * It hits the /recipe/delete/{id} endpoint with a DELETE request.
+   * It hits the /recipe/delete/{recipeId} endpoint with a DELETE request.
    *
    * @example recipeService.delete(1).then((response) => console.log(response.status));
-   * @param {number} id The ID of the recipe to delete.
+   * @param {number} recipeId The ID of the recipe to delete.
    */
-  delete(id) {
-    return httpClient.delete(`/recipe/delete/${id}`);
+  delete(recipeId) {
+    return httpClient.delete(`/recipe/delete/${recipeId}`);
+  },
+  /**
+   * This is the PUT service call to add one or more tags to a recipe.
+   * It will return a 200 response with the updated recipe object.
+   * It will return a 404 if no recipe is found with the specified ID.
+   * It will return a 404 if no tags are found with the specified ID or IDs.
+   * 
+   * It hits the /recipe/add-tags/{recipeId} endpoint with a PUT request.
+   * 
+   * @example recipeService.addTagsToRecipe(1, [2, 3, 4]).then(response) => console.log(response.data));
+   * @param {number} recipeId The ID of the recipe to add one or more tags to.
+   * @param {array} tagIds The array with ID(s) of the tag(s) to be added to a recipe.
+   * @returns The updated Recipe object.
+   */
+  addTagsToRecipe(recipeId, tagIds) {
+    return httpClient.put(`/recipe/add-tags/${recipeId}`, tagIds);
   },
 }

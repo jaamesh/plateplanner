@@ -7,10 +7,10 @@ import httpClient from "./axiosConfig.js";
  * call any of the methods defined below.
  *
  * * `userService.getAll()` will return a list of all users.
- * * `userService.getById(id)` will return the user with the specified ID.
+ * * `userService.getById(userId)` will return the user with the specified ID.
  * * `userService.create(userObject)` will create a new user.
- * * `userService.update(id, userObject)` will update an existing user.
- * * `userService.delete(id)` will delete the user with the specified ID.
+ * * `userService.update(userId, userObject)` will update an existing user.
+ * * `userService.delete(userId)` will delete the user with the specified ID.
  */
 export default {
   /**
@@ -31,15 +31,15 @@ export default {
    * It will return a 200 response with the user object.
    * If no user is found with the specified ID, it will return a 404.
    *
-   * It hits the /user/{id} endpoint with a GET request.
+   * It hits the /user/{userId} endpoint with a GET request.
    *
    * To use it in a component, you would do something like this:
    * @example userService.getById(1).then((response) => console.log(response.data));
-   * @param {number} id The ID of the user to retrieve.
+   * @param {number} userId The ID of the user to retrieve.
    * @returns The User object with the specified ID.
    */
-  getById(id) {
-    return httpClient.get(`/user/${id}`);
+  getById(userId) {
+    return httpClient.get(`/user/${userId}`);
   },
   /**
    * This is the POST service call to create a new user.
@@ -58,26 +58,26 @@ export default {
    * It will return a 204 (no content) response if the user is updated successfully.
    * It will return a 404 if no user is found with the specified ID.
    *
-   * It hits the /user/update/{id} endpoint with a POST request.
+   * It hits the /user/update/{userId} endpoint with a POST request.
    *
    * @example userService.update(1, userObject).then((response) => console.log(response.status));
-   * @param {number} id The ID of the user to update.
+   * @param {number} userId The ID of the user to update.
    * @param {object} userObject The User object with updated values.
    */
-  update(id, userObject) {
-    return httpClient.post(`/user/update/${id}`, userObject);
+  update(userId, userObject) {
+    return httpClient.post(`/user/update/${userId}`, userObject);
   },
   /**
    * This is the DELETE service call to delete a user by its ID.
    * It will return a 204 (no content) response if the user is deleted successfully.
    * It will return a 404 if no user is found with the specified ID.
    *
-   * It hits the /user/delete/{id} endpoint with a DELETE request.
+   * It hits the /user/delete/{userId} endpoint with a DELETE request.
    *
    * @example userService.delete(1).then((response) => console.log(response.status));
-   * @param {number} id The ID of the user to delete.
+   * @param {number} userId The ID of the user to delete.
    */
-  delete(id) {
-    return httpClient.delete(`/user/delete/${id}`);
+  delete(userId) {
+    return httpClient.delete(`/user/delete/${userId}`);
   },
 };

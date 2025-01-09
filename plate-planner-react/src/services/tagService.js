@@ -7,10 +7,10 @@ import httpClient from "./axiosConfig.js";
  * call any of the methods defined below.
  *
  * * `tagService.getAll()` will return a list of all tags.
- * * `tagService.getById(id)` will return the tag with the specified ID.
+ * * `tagService.getById(tagId)` will return the tag with the specified ID.
  * * `tagService.create(tagObject)` will create a new tag.
- * * `tagService.update(id, tagObject)` will update an existing tag.
- * * `tagService.delete(id)` will delete the tag with the specified ID.
+ * * `tagService.update(tagId, tagObject)` will update an existing tag.
+ * * `tagService.delete(tagId)` will delete the tag with the specified ID.
  */
 export default {
   /**
@@ -31,15 +31,15 @@ export default {
    * It will return a 200 response with the tag object.
    * If no tag is found with the specified ID, it will return a 404.
    *
-   * It hits the /tag/{id} endpoint with a GET request.
+   * It hits the /tag/{tagId} endpoint with a GET request.
    *
    * To use it in a component, you would do something like this:
    * @example tagService.getById(1).then((response) => console.log(response.data));
-   * @param {number} id The ID of the tag to retrieve.
+   * @param {number} tagId The ID of the tag to retrieve.
    * @returns The Tag object with the specified ID.
    */
-  getById(id) {
-    return httpClient.get(`/tag/${id}`);
+  getById(tagId) {
+    return httpClient.get(`/tag/${tagId}`);
   },
   /**
    * This is the POST service call to create a new tag.
@@ -58,26 +58,26 @@ export default {
    * It will return a 204 (no content) response if the tag is updated successfully.
    * It will return a 404 if no tag is found with the specified ID.
    *
-   * It hits the /tag/update/{id} endpoint with a POST request.
+   * It hits the /tag/update/{tagId} endpoint with a POST request.
    *
    * @example tagService.update(1, tagObject).then((response) => console.log(response.status));
-   * @param {number} id The ID of the tag to update.
+   * @param {number} tagId The ID of the tag to update.
    * @param {object} tagObject The Tag object with updated information.
    */
-  update(id, tagObject) {
-    return httpClient.post(`/tag/update/${id}`, tagObject);
+  update(tagId, tagObject) {
+    return httpClient.post(`/tag/update/${tagId}`, tagObject);
   },
   /**
    * This is the DELETE service call to delete a tag by its ID.
    * It will return a 204 (no content) response if the tag is deleted successfully.
    * It will return a 404 if no tag is found with the specified ID.
    *
-   * It hits the /tag/delete/{id} endpoint with a DELETE request.
+   * It hits the /tag/delete/{tagId} endpoint with a DELETE request.
    *
    * @example tagService.delete(1).then((response) => console.log(response.status));
-   * @param {number} id The ID of the tag to delete.
+   * @param {number} tagId The ID of the tag to delete.
    */
-  delete(id) {
-    return httpClient.delete(`/tag/delete/${id}`);
+  delete(tagId) {
+    return httpClient.delete(`/tag/delete/${tagId}`);
   },
 };

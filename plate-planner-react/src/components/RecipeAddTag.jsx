@@ -19,6 +19,7 @@ export default function App(props) {
     const [recipeToTag, setRecipeToTag] = useState(props.recipe);
     const [tags, setTags] = useState(null);
     const [tagsToSave, setTagsToSave] = useState(null);
+    const [tagIdsToSave, setTagIdsToSave] = useState(null);
     const [actionMsg, setActionMsg] = useState(null);
 
 
@@ -52,35 +53,50 @@ export default function App(props) {
 
     const handleTagSelect = (e) => {
         let chosenTags = [];
+        let chosenTagIds = [];
         for (var i = 0; i < e.target.options.length; i++) {
             console.log("Option: ", e.target.options[i])
             if (e.target.options[i].selected)
             {
                 chosenTags.push(tags[i]);
+                chosenTagIds.push(tags[i].id);
             }
         }
 
         setTagsToSave(chosenTags);
+        setTagIdsToSave(chosenTagIds);
         console.log("chosenTags: ", chosenTags);
+        console.log("chosenTagIds: ", chosenTagIds);
     }
 
     const updateRecipe = () => {
         setActionMsg("Updating recipe with tags...");
 
-        for (var i = 0; i < tagsToSave.length; i++) {
-            tagsToSave[i].recipes.push(recipeToTag.id)
+        if (tagIdsToSave == null && (recipeToTag.tags == null || recipeToTag.tags.length == 0)) {
+            setActionMsg("Please select one or more tags before clicking Update Tags.");
+            setTimeout(() => {
+                    setActionMsg(null);
+                }, 3000);    
+        } else {            
+            if ((tagIdsToSave == null || tagIdsToSave.length == 0) && recipeToTag.tags != null && recipeToTag.tags.length > 0) {
+                setActionMsg("Removing tags from recipe.");
+                setTagIdsToSave([]);
+            }
+            recipeService.updateTagsToRecipe(recipeToTag.id, tagIdsToSave)
+            .then((response) => {
+                if (tagIdsToSave.length > 0) {
+                    setActionMsg("Tags updated on recipe.");
+                    recipeToTag.tags = tagsToSave;
+                    console.log("recipeToTag: ", recipeToTag);
+                } else {
+                    setActionMsg("Tags removed from recipe.");
+                }
+            })
+            .catch((err) => {
+                setActionMsg("There was a problem connecting to the database.  Please try again later.");
+                console.log("Error: ", err.message);
+            });
         }
-        recipeToTag.tags.push(tagsToSave);
-        console.log("recipeToTag: ", recipeToTag);
-
-        recipeService.update(recipeToTag.id, recipeToTag)
-        .then((response) => {
-            setActionMsg("Tags saved to recipe.");
-        })
-        .catch((err) => {
-            setActionMsg("There was a problem connecting to the database.  Please try again later.");
-            console.log("Error: ", err.message);
-        });
         
     };
 
@@ -107,7 +123,7 @@ export default function App(props) {
                                             let selected = false;
                                             tags.forEach((tag, index) => {
                                                 for (var i = 0; i < recipeToTag.tags.length; i++) {
-                                                    selected = tag.id == recipeToTag.tags[i];
+                                                    selected = tag.id == recipeToTag.tags[i].id;
                                                     if (selected) { break; }
                                                 }
                                                 container.push(
@@ -128,7 +144,7 @@ export default function App(props) {
                         <MDBModalFooter>
                             <Button label="Close" onClick={closeWindow} />
                             {actionMsg == null &&
-                                <Button label="Tag Recipe" onClick={updateRecipe}/>
+                                <Button label="Update Tags" onClick={updateRecipe}/>
                             }      
                         </MDBModalFooter>
                     </MDBModalContent>

@@ -13,7 +13,6 @@ function handleAddRecipeToMealPlan(recipeId) {
 }
 
 function RecipeCards(props) {
-
     if (props.recipes != undefined) {
         return (
          <div key="recipecards">
@@ -25,6 +24,19 @@ function RecipeCards(props) {
                     <h2 className='card-title'>{recipe.name}</h2>
                     <p>{recipe.description}</p>
                     <img src={recipe.imageURL} alt={recipe.name + " image"} className='card-img-top mx-auto d-block w-25'/>
+                    {recipe.tags != null && recipe.tags.length > 0 &&
+                    <div className="container">
+                        <div className="row justify-content-around">
+                        <div className="col"></div><div className="col"><div className="row justify-content-around">
+                            {recipe.tags.map((tag) => (
+                                <div className="col" key={tag.id != null ? tag.id : tag.name} style={{fontWeight: 600}}>
+                                &nbsp;{tag.name}&nbsp;
+                                </div>
+                            ))}
+                        </div></div><div className="col"></div>
+                        </div>
+                    </div>
+                    }
                     <h3>Ingredients:</h3>
                     <ul>
                         {recipe.recipeIngredients.map((ingredient) => (

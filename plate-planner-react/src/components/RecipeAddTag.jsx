@@ -32,6 +32,7 @@ export default function App(props) {
 
     const closeWindow = () => {
         setTags(null);
+        props.setStateCounter(props.stateCounter + 1);
         toggleOpen();
     }
 

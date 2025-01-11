@@ -13,13 +13,18 @@ function handleAddRecipeToMealPlan(recipeId) {
 }
 
 function RecipeCards(props) {
-    if (props.recipes != undefined) {
+    const [recipes, setRecipes] = useState(props.recipes);
+    const [title, setTitle] = useState(props.title);
+    const [stateCounter, setStateCounter] = useState(0);
+
+
+    if (recipes != undefined) {
         return (
          <div key="recipecards">
-            {props.recipes != null && props.title && 
-                <h1>{props.recipes.length} {props.title}</h1>
+            {recipes != null && title && 
+                <h1>{recipes.length} {title}</h1>
             }
-            {props.recipes.map((recipe) => (
+            {recipes.map((recipe) => (
                 <div key={recipe.id != null ? recipe.id : recipe.name} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>
                     <p>{recipe.description}</p>
@@ -61,7 +66,7 @@ function RecipeCards(props) {
                         }
                         {recipe.id != null &&
                             <div className="col-4">
-                                <RecipeAddTag recipe={recipe} />
+                                <RecipeAddTag recipe={recipe} setStateCounter={setStateCounter} counter={stateCounter} />
                             </div>
                         }
                  </div>

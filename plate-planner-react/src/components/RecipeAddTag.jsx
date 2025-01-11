@@ -32,7 +32,7 @@ export default function App(props) {
 
     const closeWindow = () => {
         setTags(null);
-        props.setStateCounter(props.stateCounter + 1);
+        props.setStateCounter(props.counter + 1);
         toggleOpen();
     }
 
@@ -91,6 +91,7 @@ export default function App(props) {
                     console.log("recipeToTag: ", recipeToTag);
                 } else {
                     setActionMsg("Tags removed from recipe.");
+                    recipeToTag.tags = tagsToSave;
                 }
             })
             .catch((err) => {

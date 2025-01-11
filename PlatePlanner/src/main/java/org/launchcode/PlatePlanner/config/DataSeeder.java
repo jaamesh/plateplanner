@@ -152,9 +152,17 @@ public class DataSeeder {
                 }
 
                 MealPlan testMealPlan = new MealPlan(user1, "Test Meal Plan");
-                testMealPlan.setRecipes(recipeSet);
-
                 System.out.println("Meal plan (" + testMealPlan.toString() + ") created and recipes added. Now saving meal plan to database.");
+
+                MealPlanRecipe mealPlanRecipe1 = new MealPlanRecipe(testMealPlan, recipeSet.get(0), DayOfTheWeek.SUNDAY);
+                MealPlanRecipe mealPlanRecipe2 = new MealPlanRecipe(testMealPlan, recipeSet.get(1), DayOfTheWeek.SUNDAY);
+                MealPlanRecipe mealPlanRecipe3 = new MealPlanRecipe(testMealPlan, recipeSet.get(1), DayOfTheWeek.MONDAY);
+
+                testMealPlan.addMealPlanRecipe(mealPlanRecipe1);
+                testMealPlan.addMealPlanRecipe(mealPlanRecipe2);
+                testMealPlan.addMealPlanRecipe(mealPlanRecipe2);
+
+                System.out.println("MealPlanRecipe objects created and added to MealPlan");
 
                 mealPlanRepository.save(testMealPlan);
 

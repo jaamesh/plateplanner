@@ -14,6 +14,8 @@ function handleAddRecipeToMealPlan(recipeId) {
 
 function RecipeCards(props) {
 
+    console.log("props.recipes is: ", props.recipes);
+
     if (props.recipes != undefined) {
         return (
          <div key="recipecards">

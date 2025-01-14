@@ -3,6 +3,7 @@ import axios from "axios";
 import RecipeCards from './RecipeCards.jsx';
 
 
+
 const RecipeTextSearch = () => {
     const [query, setQuery] = useState('');
     const [searchRecipes, setSearchRecipes] = useState();
@@ -25,7 +26,7 @@ const RecipeTextSearch = () => {
             setSearchRecipes(data);
             setLoading(false);
         })
-        .catch(error => {
+        .catch(err => {
             setError(err.message);
             setLoading(false);
         });

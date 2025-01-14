@@ -1,5 +1,6 @@
 package org.launchcode.PlatePlanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -58,6 +59,7 @@ public class Recipe extends AbstractEntity {
     private String sourceURL;
 
     @ManyToMany
+    @JsonIgnoreProperties({"recipes"})
     @JoinTable(
             name = "recipe_tag",
             joinColumns = @JoinColumn(name = "recipe_id"),

@@ -13,18 +13,35 @@ function handleAddRecipeToMealPlan(recipeId) {
 }
 
 function RecipeCards(props) {
+    const [recipes, setRecipes] = useState(props.recipes);
+    const [title, setTitle] = useState(props.title);
+    const [stateCounter, setStateCounter] = useState(0);
 
-    if (props.recipes != undefined) {
+
+    if (recipes != undefined) {
         return (
          <div key="recipecards">
-            {props.recipes != null && props.title && 
-                <h1>{props.recipes.length} {props.title}</h1>
+            {recipes != null && title && 
+                <h1>{recipes.length} {title}</h1>
             }
-            {props.recipes.map((recipe) => (
+            {recipes.map((recipe) => (
                 <div key={recipe.id != null ? recipe.id : recipe.name} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>
                     <p>{recipe.description}</p>
                     <img src={recipe.imageURL} alt={recipe.name + " image"} className='card-img-top mx-auto d-block w-25'/>
+                    {recipe.tags != null && recipe.tags.length > 0 &&
+                    <div className="container">
+                        <div className="row justify-content-around">
+                        <div className="col"></div><div className="col"><div className="row justify-content-around">
+                            {recipe.tags.map((tag) => (
+                                <div className="col" key={tag.id != null ? tag.id : tag.name} style={{fontWeight: 600}}>
+                                &nbsp;{tag.name}&nbsp;
+                                </div>
+                            ))}
+                        </div></div><div className="col"></div>
+                        </div>
+                    </div>
+                    }
                     <h3>Ingredients:</h3>
                     <ul>
                         {recipe.recipeIngredients.map((ingredient) => (
@@ -49,7 +66,7 @@ function RecipeCards(props) {
                         }
                         {recipe.id != null &&
                             <div className="col-4">
-                                <RecipeAddTag recipe={recipe} />
+                                <RecipeAddTag recipe={recipe} setStateCounter={setStateCounter} counter={stateCounter} />
                             </div>
                         }
                  </div>

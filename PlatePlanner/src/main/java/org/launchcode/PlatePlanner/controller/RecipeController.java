@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,6 +108,39 @@ public class RecipeController {
 
         for (Tag tag : tags) {
             recipe.addTag(tag);
+        }
+
+        Recipe updatedRecipe = recipeRepository.save(recipe);
+
+        return ResponseEntity.ok(updatedRecipe);
+    }
+
+    //Add and remove tags to recipe by ID
+    //Removes all tags currently on recipe that are not in submitted list.
+    @PutMapping("/update-tags/{recipeId}")
+    public ResponseEntity<Recipe> updateTagsToRecipe(@PathVariable("recipeId") Long recipeId, @RequestBody @Valid List<Long> tagIds) {
+        logger.info("In updateTagsToRecipe...");
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
+            logger.warn("Recipe with ID {} not found...", recipeId);
+            return ResponseEntity.notFound().build();
+        }
+
+        Recipe recipe = optionalRecipe.get();
+
+        //Remove all tags first.  Later add any submitted.
+        recipe.setTags(new HashSet<>());
+
+        if (tagIds != null && tagIds.size() > 0) {
+            List<Tag> tags = tagRepository.findAllById(tagIds);
+            if (tags.isEmpty()) {
+                logger.warn("Tag(s) with ID(s) {} not found...", tagIds);
+                return ResponseEntity.notFound().build();
+            }
+            //Add tags submitted.
+            for (Tag tag : tags) {
+                recipe.addTag(tag);
+            }
         }
 
         Recipe updatedRecipe = recipeRepository.save(recipe);

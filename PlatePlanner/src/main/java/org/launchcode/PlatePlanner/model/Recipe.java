@@ -58,6 +58,7 @@ public class Recipe extends AbstractEntity {
     private String sourceURL;
 
     @ManyToMany
+    @JsonIgnoreProperties({"recipes"})
     @JoinTable(
             name = "recipe_tag",
             joinColumns = @JoinColumn(name = "recipe_id"),

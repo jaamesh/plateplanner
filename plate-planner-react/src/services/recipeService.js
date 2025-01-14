@@ -97,4 +97,20 @@ export default {
   addTagsToRecipe(recipeId, tagIds) {
     return httpClient.put(`/recipe/add-tags/${recipeId}`, tagIds);
   },
+/**
+   * This is the PUT service call to add one or more tags to a recipe and remove existing.
+   * It will return a 200 response with the updated recipe object.
+   * It will return a 404 if no recipe is found with the specified ID.
+   * It will return a 404 if no tags are found with the specified ID or IDs.
+   * 
+   * It hits the /recipe/update-tags/{recipeId} endpoint with a PUT request.
+   * 
+   * @example recipeService.updateTagsToRecipe(1, [2, 3, 4]).then(response) => console.log(response.data));
+   * @param {number} recipeId The ID of the recipe to add one or more tags to.
+   * @param {array} tagIds The array with ID(s) of the tag(s) to be added to a recipe.
+   * @returns The updated Recipe object.
+   */
+updateTagsToRecipe(recipeId, tagIds) {
+  return httpClient.put(`/recipe/update-tags/${recipeId}`, tagIds);
+},
 }

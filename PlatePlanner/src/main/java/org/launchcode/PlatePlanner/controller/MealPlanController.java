@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -134,6 +136,36 @@ public class MealPlanController {
     //Add recipe to meal plan by ID
     @PutMapping("/{mealPlanId}/add-recipe/{recipeId}")
     public ResponseEntity<MealPlan> addRecipeToMealPlan(@PathVariable("recipeId") Long recipeId, @PathVariable("mealPlanId") Long mealPlanId) {
+        logger.info("In addRecipeToMealPlan...");
+        Optional<MealPlan> optionalMealPlan = mealPlanRepository.findById(mealPlanId);
+        if (optionalMealPlan.isEmpty()) {
+            logger.warn("MealPlan with ID {} not found...", mealPlanId);
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("MealPlan with ID {} found...", mealPlanId);
+        MealPlan mealPlan = optionalMealPlan.get();
+
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
+            logger.warn("Recipe with ID {} not found...", recipeId);
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("Recipe with ID {} found...", recipeId);
+        Recipe recipe = optionalRecipe.get();
+
+        mealPlan.addRecipe(recipe);
+
+        MealPlan updatedMealPlan = mealPlanRepository.save(mealPlan);
+
+        return ResponseEntity.ok(updatedMealPlan);
+    }
+
+    //Method for adding a recipe to the meal plan with a selected day.
+
+    @PutMapping("/{mealPlanId}/add-recipe/{recipeId}/to-day/{selectedDay}")
+    public ResponseEntity<MealPlan> addRecipeToMealPlanOnSelectedDay(@PathVariable("recipeId") Long recipeId, @PathVariable("mealPlanId") Long mealPlanId, @PathVariable("selectedDay") String selectedDay) {
         logger.info("In addRecipeToMealPlan...");
         Optional<MealPlan> optionalMealPlan = mealPlanRepository.findById(mealPlanId);
         if (optionalMealPlan.isEmpty()) {

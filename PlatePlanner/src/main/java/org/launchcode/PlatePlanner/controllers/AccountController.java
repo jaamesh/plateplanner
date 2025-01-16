@@ -1,11 +1,11 @@
 package org.launchcode.PlatePlanner.controllers;
 
-
 import jakarta.validation.Valid;
 import org.launchcode.PlatePlanner.model.AppUser;
 import org.launchcode.PlatePlanner.model.RegisterDto;
 import org.launchcode.PlatePlanner.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +21,19 @@ import java.util.Date;
 public class AccountController {
     @Autowired
     private AppUserRepository repo;
+
+    @GetMapping("/profile")
+    public String profile(Authentication auth, Model model) {
+        AppUser user = repo.findByEmail(auth.getName());
+        model.addAttribute("appUser", user);
+
+        return "profile";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -57,17 +70,17 @@ public class AccountController {
         }
 
         try {
-            //Create new account
+
             var bCryptEncoder = new BCryptPasswordEncoder();
 
             AppUser newUser = new AppUser();
             newUser.setFirstName(registerDto.getFirstName());
-            newUser.setLastname(registerDto.getLastName());
+            newUser.setLastName(registerDto.getLastName());
             newUser.setEmail(registerDto.getEmail());
             newUser.setPhone(registerDto.getPhone());
             newUser.setAddress(registerDto.getAddress());
 
-            newUser.setRole("client");
+            newUser.setRole("user");
             newUser.setCreatedAt(new Date());
             newUser.setPassword(bCryptEncoder.encode(registerDto.getPassword()));
 

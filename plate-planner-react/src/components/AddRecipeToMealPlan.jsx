@@ -19,6 +19,7 @@ function AddRecipeToMealPlan({ recipeId }) {
     const toggleOpen = () => setBasicModal(!basicModal);
     const [selectedMealPlan, setSelectedMealPlan] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
+    const [mealPlanId, setMealPlanId] = useState(1);
 
     const handleDayChange = (day) => {
         setSelectedDay(day);
@@ -32,7 +33,7 @@ function AddRecipeToMealPlan({ recipeId }) {
         setError(null);
 
         try {
-            const response = await mealPlanService.addRecipeOnDay(recipeId, selectedDay);
+            const response = await mealPlanService.addRecipeOnDay(mealPlanId, recipeId, selectedDay);
 
             if (response.status !== 200 && response.status !== 201 && response.status !== 204) {
                 throw new Error("Could not add recipe to that day");

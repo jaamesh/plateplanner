@@ -1,9 +1,7 @@
 package org.launchcode.PlatePlanner.controller;
 
 import jakarta.validation.Valid;
-import org.launchcode.PlatePlanner.model.MealPlan;
-import org.launchcode.PlatePlanner.model.Recipe;
-import org.launchcode.PlatePlanner.model.User;
+import org.launchcode.PlatePlanner.model.*;
 import org.launchcode.PlatePlanner.repository.MealPlanRepository;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
@@ -164,8 +162,8 @@ public class MealPlanController {
 
     //Method for adding a recipe to the meal plan with a selected day.
 
-    @PutMapping("/{mealPlanId}/add-recipe/{recipeId}/to-day/{selectedDay}")
-    public ResponseEntity<MealPlan> addRecipeToMealPlanOnSelectedDay(@PathVariable("recipeId") Long recipeId, @PathVariable("mealPlanId") Long mealPlanId, @PathVariable("selectedDay") String selectedDay) {
+    @PutMapping("/{mealPlanId}/add-recipe/{recipeId}/add-to-day/{selectedDay}")
+    public ResponseEntity<MealPlan> addRecipeToMealPlanOnSelectedDay(@PathVariable("mealPlanId") Long mealPlanId, @PathVariable("recipeId") Long recipeId, @PathVariable("selectedDay") String selectedDay) {
         logger.info("In addRecipeToMealPlan...");
         Optional<MealPlan> optionalMealPlan = mealPlanRepository.findById(mealPlanId);
         if (optionalMealPlan.isEmpty()) {
@@ -185,9 +183,20 @@ public class MealPlanController {
         logger.info("Recipe with ID {} found...", recipeId);
         Recipe recipe = optionalRecipe.get();
 
-        mealPlan.addRecipe(recipe);
+        DayOfTheWeek dayOfTheWeek;
+        try {
+            dayOfTheWeek = DayOfTheWeek.valueOf(selectedDay.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid day'{}'", selectedDay);
+            return ResponseEntity.badRequest().build();
+        }
+
+        MealPlanRecipe mealPlanRecipe = new MealPlanRecipe(mealPlan, recipe, dayOfTheWeek);
+
+        mealPlan.addMealPlanRecipe(mealPlanRecipe);
 
         MealPlan updatedMealPlan = mealPlanRepository.save(mealPlan);
+        logger.info("MealPlan ID {} updated with Recipe {} on day {}", mealPlanId, recipeId, dayOfTheWeek);
 
         return ResponseEntity.ok(updatedMealPlan);
     }

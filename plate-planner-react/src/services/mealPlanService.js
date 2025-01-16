@@ -130,7 +130,7 @@ export default {
     return httpClient.put(`/meal-plan/${mealPlanId}/add-recipe/${recipeId}`);
   },
 
-  addRecipeOnDay(recipeId, selectedDay) {
-    return httpClient.put(`/meal-plan/${recipeId}/add-to-day/${selectedDay}`)
+  addRecipeOnDay(mealPlanId, recipeId, selectedDay) {
+    return httpClient.put(`/meal-plan/${mealPlanId}/add-recipe/${recipeId}/add-to-day/${selectedDay}`)
   }
 }

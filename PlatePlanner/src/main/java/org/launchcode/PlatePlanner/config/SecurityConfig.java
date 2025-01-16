@@ -22,9 +22,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .defaultSuccessUrl("http://localhost:5173?name=" + , true)
+                        .defaultSuccessUrl("http://localhost:8080/secure-access/process-login", true)
                 )
-                .logout(config -> config.logoutSuccessUrl("/"))
+                .logout(config -> config.logoutSuccessUrl("http://localhost:8080/secure-access/process-logout"))
                 .build();
 
     }
@@ -39,6 +39,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","PATCH"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

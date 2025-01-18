@@ -1,6 +1,7 @@
 import mealPlanService from "@/services/mealPlanService.js";
 import { useState, useEffect } from "react";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 const daysOfTheWeekData = [
     { name: "Sunday", recipes: [] },
@@ -14,6 +15,7 @@ const daysOfTheWeekData = [
 
 const MealPlanUI = () => {
     const [daysOfTheWeek, setDaysOfTheWeek] = useState(daysOfTheWeekData);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch("http://localhost:8080/meal-plan/test-meal-plan")
@@ -44,8 +46,8 @@ const MealPlanUI = () => {
         });
     }, []);
 
-    const handleAddRecipeClick = (dayName) => {
-        console.log(`Add recipe to ${dayName}`);
+    const handleAddRecipeClick = () => {
+        navigate("/saved-recipes");
     };
 
     return (
@@ -63,7 +65,7 @@ const MealPlanUI = () => {
                         <div className="text-end">
                             <Button 
                                 label="Add Recipe" 
-                                onClick={() => handleAddRecipeClick(day.name)}
+                                onClick={() => handleAddRecipeClick()}
                             />
                         </div>
                 </div>

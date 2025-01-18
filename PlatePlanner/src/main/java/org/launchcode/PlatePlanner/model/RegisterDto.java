@@ -13,14 +13,15 @@ public class RegisterDto {
     private  String lastName;
 
     @NotEmpty
-    private String userName;
+    private String username;
 
-    public String getUserName() {
-        return userName;
+    @NotEmpty
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {

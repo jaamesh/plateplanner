@@ -80,7 +80,7 @@ public class AccountController {
             newUser.setEmail(registerDto.getEmail());
             newUser.setPhone(registerDto.getPhone());
             newUser.setAddress(registerDto.getAddress());
-            newUser.setUsername(registerDto.getUserName());
+            newUser.setUsername(registerDto.getUsername());
 
             newUser.setRole(Role.USER);
             newUser.setPassword(bCryptEncoder.encode(registerDto.getPassword()));

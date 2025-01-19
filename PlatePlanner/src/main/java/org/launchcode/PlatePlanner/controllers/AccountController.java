@@ -25,7 +25,8 @@ public class AccountController {
 
     @GetMapping("/profile")
     public String profile(Authentication auth, Model model) {
-        Optional<User> user = userRepository.findByEmail(auth.getName());
+        Optional<User> optUser = userRepository.findByEmail(((User) auth.getPrincipal()).getEmail());
+        User user = optUser.get();
         model.addAttribute("appUser", user);
 
         return "profile";

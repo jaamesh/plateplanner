@@ -54,6 +54,46 @@ public class MealPlanController {
         }
     }
 
+    //Creates meal plan if none exists for the user and returns the meal plan.
+
+    @GetMapping
+    public ResponseEntity<Optional<MealPlan>> getOrCreateMealPlan(@AuthenticationPrincipal UserDetails userDetails) {
+
+        if (userDetails == null) {
+            logger.error("No authenticated user found. Cannot retrieve meal plan.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = userDetails.getUsername();
+        logger.info("Authenticated user: {}", username); // Print username
+
+
+        logger.info("In getOrCreateMealPlan for User: {}", username);
+
+        logger.info("Retrieving userID and meal plan.");
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            logger.error("No user found with username: {}", username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User user = optionalUser.get();
+        logger.info("User ID: {}", user.getId());
+
+        Set<MealPlan> mealPlans = user.getMealPlans();
+
+        if (mealPlans.isEmpty()) {
+            logger.info("User has no meal plans. Creating a new meal plan...");
+            MealPlan newMealPlan = new MealPlan(user, "New Meal Plan");
+            mealPlanRepository.save(newMealPlan);
+            return ResponseEntity.ok(Optional.of(newMealPlan));
+        } else {
+            logger.info("Meal plan has been found.");
+            return ResponseEntity.ok(Optional.of(mealPlans.iterator().next()));
+        }
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Object> createMealPlan(@RequestBody @Valid MealPlan mealPlan, Errors errors) {
         logger.info("In createMealPlan...");

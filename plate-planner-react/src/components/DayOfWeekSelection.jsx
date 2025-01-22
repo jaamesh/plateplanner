@@ -18,8 +18,9 @@ function DayOfWeekSelection({ selectedDay, onDayChange }) {
 
     return (
         <div>
-            <label htmlFor="daySelect">Select a Day:</label>
+            <label htmlFor="daySelect"></label>
             <select name="daySelect" id="daySelect" className="form-select" value={selectedDay} onChange={handleChange}>
+                <option value="" disabled>Select a Day</option>
                 {daysOfTheWeek.map(day => (
                     <option key={day.value} value={day.value}>{day.display}</option>
                 ))}

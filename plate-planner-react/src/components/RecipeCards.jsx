@@ -20,8 +20,6 @@ function RecipeCards(props) {
 
     if (recipes != undefined) {
 
-        console.log("what is in 'recipes'?: " + recipes);
-
         return (
          <div key="recipecards">
             {recipes != null && title && 

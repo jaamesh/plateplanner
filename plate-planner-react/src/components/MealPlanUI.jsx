@@ -18,8 +18,8 @@ const MealPlanUI = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:8080/meal-plan/test-meal-plan")
-        .then((response) => response.json())
+        mealPlanService.getUserMealPlan()
+        .then((response) => response.data)
         .then((data) => {
             if (data && data.mealPlanRecipes) {
                 const updatedDays = daysOfTheWeekData.map((day) => (

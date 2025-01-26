@@ -2,9 +2,8 @@ import mealPlanService from "@/services/mealPlanService.js";
 import { useState, useEffect } from "react";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
-import trashcanIcon from "../assets/trash.svg"
-
-
+import trashcanIcon from "../assets/trash.svg";
+import RecipeCardModal from "./RecipeCardModal";
 
 const MealPlanUI = () => {
     const daysOfTheWeekData = [
@@ -19,6 +18,8 @@ const MealPlanUI = () => {
 
     const [daysOfTheWeek, setDaysOfTheWeek] = useState(daysOfTheWeekData);
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+    const [selectedRecipeId, setSelectedRecipeId] = useState(null);
 
     useEffect(() => {
         mealPlanService.getUserMealPlan()
@@ -87,7 +88,7 @@ const MealPlanUI = () => {
                         <div key={recipeObj.mealPlanRecipeId} className="recipe-item">
                             <span
                                 onClick={() => {
-                                    setSelectedRecipe(recipeObj);
+                                    setSelectedRecipeId(recipeObj.id);
                                     setShowModal(true);
                                 }}
                                 style={{ cursor: 'pointer', textDecoration: 'underline' }}
@@ -111,10 +112,15 @@ const MealPlanUI = () => {
                             />
                         </div>
                 </div>
-                
             ))}
             <hr />
         </div>
+        {showModal && selectedRecipeId && (
+        <RecipeCardModal
+          recipeId={selectedRecipeId}
+          onClose={() => setShowModal(false)}
+        />
+      )};
     </div>
     );
 }

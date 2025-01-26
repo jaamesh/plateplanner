@@ -1,21 +1,24 @@
 package org.launchcode.PlatePlanner.controller;
 
 import jakarta.validation.Valid;
-import org.launchcode.PlatePlanner.model.MealPlan;
-import org.launchcode.PlatePlanner.model.Recipe;
-import org.launchcode.PlatePlanner.model.ShoppingList;
-import org.launchcode.PlatePlanner.model.ShoppingListItem;
+import org.launchcode.PlatePlanner.model.*;
 import org.launchcode.PlatePlanner.repository.MealPlanRepository;
 import org.launchcode.PlatePlanner.repository.ShoppingListRepository;
+import org.launchcode.PlatePlanner.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("shopping-list")
@@ -30,10 +33,49 @@ public class ShoppingListController {
     @Autowired
     private MealPlanRepository mealPlanRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/all")
     public ResponseEntity<List<ShoppingList>> getAllSavedShoppingLists() {
         logger.info("In getAllSavedShoppingLists...");
         return ResponseEntity.ok(shoppingListRepository.findAll());
+    }
+
+    //Fetch shopping list of Authenticated User
+
+    @GetMapping
+    public ResponseEntity<ShoppingList> getUserShoppingList(@AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("In getUserShoppingList...");
+
+        if (userDetails == null) {
+            logger.error("No authenticated user found. Cannot retrieve shopping list.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = userDetails.getUsername();
+        logger.info("Authenticated user: {}", username);
+
+        logger.info("Retrieving userID and shopping list.");
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            logger.error("No user found with username: {}", username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User user = optionalUser.get();
+        logger.info("User ID: {}", user.getId());
+
+        Set<ShoppingList> shoppingLists = user.getShoppingLists();
+
+        if (shoppingLists.isEmpty()) {
+            logger.info("User has no shopping lists.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            logger.info("Shopping list found.");
+            return ResponseEntity.ok(shoppingLists.iterator().next());
+        }
     }
 
     @GetMapping("/{shoppingListId}")
@@ -47,6 +89,56 @@ public class ShoppingListController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //A method to update the shopping list with the current meal plan
+
+//    @GetMapping("/createOrUpdate")
+//    public ResponseEntity<ShoppingList> createOrUpdateShoppingList(@AuthenticationPrincipal UserDetails userDetails) {
+//        logger.info("In createOrUpdateShoppingList...");
+//
+//        if (userDetails == null) {
+//            logger.error("No authenticated user found. Cannot create or update meal plan.");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        String username = userDetails.getUsername();
+//        logger.info("Authenticated user: {}", username);
+//
+//        logger.info("Retrieving userID and shopping list.");
+//
+//        Optional<User> optionalUser = userRepository.findByUsername(username);
+//        if (optionalUser.isEmpty()) {
+//            logger.error("No user found with username: {}", username);
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        User user = optionalUser.get();
+//        logger.info("User ID: {}", user.getId());
+//
+//
+//        Set<MealPlan> mealPlans = user.getMealPlans();
+//        MealPlan mealPlan;
+//
+//        if (mealPlans.isEmpty()) {
+//            logger.error("User has no saved meal plans");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        } else {
+//            mealPlan = mealPlans.iterator().next();
+//        }
+//
+//        //retrieve the user's shopping list and
+//
+//        Set<ShoppingList> shoppingLists = user.getShoppingLists();
+//
+//
+//        if (shoppingLists.isEmpty()) {
+//            logger.info("User has no shopping lists. Creating a new shopping list based on the meal plan...");
+//            ShoppingList shoppingList = new ShoppingList()
+//        }
+//
+//        return;
+//
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<Object> createShoppingList(@RequestBody @Valid ShoppingList shoppingList, Errors errors) {

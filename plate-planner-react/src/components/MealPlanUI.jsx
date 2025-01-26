@@ -2,18 +2,21 @@ import mealPlanService from "@/services/mealPlanService.js";
 import { useState, useEffect } from "react";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
+import trashcanIcon from "../assets/trash.svg"
 
-const daysOfTheWeekData = [
-    { name: "Sunday", recipes: [] },
-    { name: "Monday", recipes: [] },
-    { name: "Tuesday", recipes: [] },
-    { name: "Wednesday", recipes: [] },
-    { name: "Thursday", recipes: [] },
-    { name: "Friday", recipes: [] },
-    { name: "Saturday", recipes: [] },
-];
+
 
 const MealPlanUI = () => {
+    const daysOfTheWeekData = [
+        { name: "Sunday", recipes: [] },
+        { name: "Monday", recipes: [] },
+        { name: "Tuesday", recipes: [] },
+        { name: "Wednesday", recipes: [] },
+        { name: "Thursday", recipes: [] },
+        { name: "Friday", recipes: [] },
+        { name: "Saturday", recipes: [] },
+    ];
+
     const [daysOfTheWeek, setDaysOfTheWeek] = useState(daysOfTheWeekData);
     const navigate = useNavigate();
 
@@ -34,7 +37,10 @@ const MealPlanUI = () => {
                     );
 
                     if (matchingDay) {
-                        matchingDay.recipes.push(mpr.recipe);
+                        matchingDay.recipes.push({
+                            mealPlanRecipeId: mpr.id,
+                            ...mpr.recipe,
+                    });
                     }
                 });
 
@@ -50,6 +56,26 @@ const MealPlanUI = () => {
         navigate("/saved-recipes");
     };
 
+    const removeRecipe = (mealPlanRecipeId) => {
+        console.log("Removing recipe with MealPlanRecipeID: " + mealPlanRecipeId);
+        mealPlanService.deleteMealPlanRecipe(mealPlanRecipeId)
+            .then(() => {
+                setDaysOfTheWeek((prevDays) => {
+                    return prevDays.map((day) => {
+                        return {
+                            ...day,
+                            recipes: day.recipes.filter(
+                                (r) => r.mealPlanRecipeId !== mealPlanRecipeId
+                            ),
+                        };
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error("Could not remove recipe from the mealplan.", error)
+            });
+    };
+
     return (
     <div>
         <h2 className="mealplan-header">Meal Plan</h2>
@@ -57,9 +83,25 @@ const MealPlanUI = () => {
             {daysOfTheWeek.map(day => (
                 <div key={day.name} className="card m-4">
                     <h2 className="text-start">{day.name}</h2>
-                    {day.recipes.map((recipe, index) => (
-                        <div key={index} className="recipe-item">
-                            <span>{recipe.name}</span>
+                    {day.recipes.map((recipeObj) => (
+                        <div key={recipeObj.mealPlanRecipeId} className="recipe-item">
+                            <span
+                                onClick={() => {
+                                    setSelectedRecipe(recipeObj);
+                                    setShowModal(true);
+                                }}
+                                style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                            >
+                                    {recipeObj.name}
+                            </span>
+                            <img src={trashcanIcon} alt="Delete Item"
+                            onClick={() => removeRecipe(recipeObj.mealPlanRecipeId)}
+                            style={{
+                                width: "15px",
+                                height: "15px",
+                                cursor: "pointer"
+                            }} />
+                            
                         </div>
                     ))}
                         <div className="text-end">

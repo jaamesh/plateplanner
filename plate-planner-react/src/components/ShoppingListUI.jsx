@@ -1,10 +1,8 @@
+import shoppingListService from "../services/shoppingListService";
 import Button from "./Button";
 import { useEffect, useState } from "react";
 
 function ShoppingListUI() {
-    const [shoppingListId, setShoppingListId] = useState(1);
-    const [mealPlanId, setMealPlanId] = useState(1);
-
     const [shoppingList, setShoppingList] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -12,7 +10,7 @@ function ShoppingListUI() {
     useEffect(() => {
         async function fetchShoppingList() {
             try {
-                const response = await fetch(`http://localhost:8080/shopping-list/${shoppingListId}`);
+                const response = await shoppingListService.getShoppingList;
 
                 if (response.ok) {
                     const data = await response.json();
@@ -30,18 +28,13 @@ function ShoppingListUI() {
         }
 
         fetchShoppingList();
-    }, [shoppingListId]);
+    }, []);
 
     const handleCreateOrUpdate = async () => {
         try {
             setError(null);
-            //POST http://localhost:8080/shopping-list/${shoppingListId}/create-or-update
 
-            const response = await fetch(`http://localhost:8080/shopping-list/${shoppingListId}/sync-with-meal-plan/${mealPlanId}`, 
-                {
-                    method: 'PUT'
-                }
-            );
+            const response = await shoppingListService.createOrUpdateShoppingList();
 
             if (!response.ok) {
                 throw new Error(`Failed to create/update shopping list (status: ${response.status})`);

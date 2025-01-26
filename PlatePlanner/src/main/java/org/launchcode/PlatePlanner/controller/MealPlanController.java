@@ -2,6 +2,7 @@ package org.launchcode.PlatePlanner.controller;
 
 import jakarta.validation.Valid;
 import org.launchcode.PlatePlanner.model.*;
+import org.launchcode.PlatePlanner.repository.MealPlanRecipeRepository;
 import org.launchcode.PlatePlanner.repository.MealPlanRepository;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
@@ -36,6 +37,9 @@ public class MealPlanController {
     @Autowired
     private RecipeRepository recipeRepository;
 
+    @Autowired
+    private MealPlanRecipeRepository mealPlanRecipeRepository;
+
     @GetMapping("/all")
     public ResponseEntity<List<MealPlan>> getAllSavedMealPlans() {
         logger.info("In getAllSavedMealPlans...");
@@ -66,7 +70,6 @@ public class MealPlanController {
 
         String username = userDetails.getUsername();
         logger.info("Authenticated user: {}", username); // Print username
-
 
         logger.info("In getOrCreateMealPlan for User: {}", username);
 
@@ -128,6 +131,43 @@ public class MealPlanController {
             logger.warn("MealPlan with ID {} not found...", mealPlanId);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    //Method to delete a meal plan recipe from the user's meal plan:
+    @DeleteMapping("/delete/mealPlanRecipe/{mealPlanRecipeId}")
+    public ResponseEntity<Object> deleteMealPlanRecipe(@PathVariable("mealPlanRecipeId") Long mealPlanRecipeId, @AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("In deteleMealPlanRecipe...");
+
+        logger.info("Retrieving authenticated user:");
+        String username = userDetails.getUsername();
+        logger.info("Found user {}", username);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            logger.error("No user found with username: {}", username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = optionalUser.get();
+        logger.info("User ID of authenticated user: {}", user.getId());
+
+        logger.info("Retrieving meal plan for authenticated user:");
+        Set<MealPlan> mealPlans = user.getMealPlans();
+        if (mealPlans.isEmpty()) {
+            logger.error("User has no meal plan. Cannot delete meal plan recipe.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        MealPlan mealPlan = mealPlans.iterator().next();
+        logger.info("Meal plan with id {} found.", mealPlan.getId());
+
+        logger.info("Deleting meal plan recipe from meal plan and saving the meal plan.");
+        Optional<MealPlanRecipe> optionalMealPlanRecipe = mealPlanRecipeRepository.findById(mealPlanRecipeId);
+        if (optionalMealPlanRecipe.isEmpty()) {
+            logger.error("Meal plan recipe with id {} does not exist. Cannot delete.", mealPlanRecipeId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        MealPlanRecipe mealPlanRecipe = optionalMealPlanRecipe.get();
+        mealPlan.removeMealPlanRecipe(mealPlanRecipe);
+        mealPlanRepository.save(mealPlan);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/user/{userId}")

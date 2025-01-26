@@ -80,4 +80,21 @@ export default {
   delete(shoppingListId) {
     return httpClient.delete(`/shopping-list/delete/${shoppingListId}`);
   },
+
+  //GET request that will fetch the shopping list
+
+  getShoppingList() {
+    return httpClient.get('/shopping-list');
+  },
+
+  //GET request that will create a new shopping list if none exists and populate it with the contents from the meal plan,
+  //or if there is a shopping list, it will update it to match the contents of the current meal plan.
+
+  createOrUpdateShoppingList() {
+    return httpClient.get()
+
+  }
+
+  
+
 };

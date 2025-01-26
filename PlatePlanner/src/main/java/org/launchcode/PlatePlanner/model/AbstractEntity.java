@@ -34,4 +34,7 @@ public abstract class AbstractEntity {
     public int hashCode() {
         return (getId() != null) ? getId().hashCode() : super.hashCode();
     }
+
+    public void setUser(User user) {
+    }
 }

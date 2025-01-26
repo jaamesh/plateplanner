@@ -3,8 +3,30 @@ import Button from "./Button";
 import RecipeAddTag from "./RecipeAddTag";
 import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
 
-function handleSaveRecipe(recipeId) {
-    console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
+// function handleSaveRecipe(recipeId) {
+//     console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
+// }
+
+function handleSaveRecipe(recipeId, userId) {
+    console.log("Saving recipe with ID: " + recipeId + " for user ID: " + userId);
+
+    fetch(`http://localhost:8080/recipe/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: recipeId, userId: userId }) // Ensure userId is included
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Recipe saved successfully!");
+        } else {
+            console.error("Failed to save recipe. Status: " + response.status);
+        }
+    })
+    .catch(error => {
+        console.error("Error occurred while saving recipe:", error);
+    });
 }
 
 function handleAddRecipeToMealPlan(recipeId) {
@@ -59,7 +81,7 @@ function RecipeCards(props) {
                         <div className="row justify-content-around">
                         {recipe.id == null &&
                             <div className="col-4">
-                                <Button label="Save Recipe" onClick={() => handleSaveRecipe(recipe.id)}/>
+                                <Button label="Save Recipe" onClick={() => handleSaveRecipe(recipe.id, props.userId)}/>
                             </div>
                         }
                         {recipe.id != null &&

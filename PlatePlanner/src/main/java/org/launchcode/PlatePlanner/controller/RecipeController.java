@@ -59,39 +59,10 @@ public class RecipeController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<Set<MealPlan>> getOrCreateMealPlan(@AuthenticationPrincipal UserDetails userDetails) {
-
-        if (userDetails == null) {
-            logger.error("No authenticated user found. Cannot retrieve meal plan.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        String username = userDetails.getUsername();
-        logger.info("Authenticated user: {}", username);
-
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        if (optionalUser.isEmpty()) {
-            logger.error("No user found with username: {}", username);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        User user = optionalUser.get();
-        logger.info("User ID: {}", user.getId());
-
-        Recipe recipe = new Recipe(); // Initialize the recipe
-        user.addRecipe(recipe);
-        userRepository.save(user);
-        recipeRepository.save(recipe);
-
-        Set<MealPlan> mealPlans = user.getMealPlans();
-        return ResponseEntity.ok(mealPlans); // Return the meal plans
-    }
-
     @PostMapping("/create")
-    public ResponseEntity<Object> createRecipe(@RequestBody @Valid Recipe recipe,
-                                               @AuthenticationPrincipal UserDetails userDetails,
-                                               Errors errors) {
+    public ResponseEntity<Object> createRecipe(@RequestBody Recipe recipe,
+                                               @AuthenticationPrincipal UserDetails userDetails
+                                              ) {
         logger.info("In createRecipe...");
 
         if (userDetails == null) {
@@ -106,15 +77,15 @@ public class RecipeController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        recipe.setDescription("James");
         User user = optionalUser.get();
         recipe.setUser(user); // Associate the recipe with the user
-        recipe.assignToIngredients();
         recipeRepository.save(recipe);
 
-        if (errors.hasErrors()) {
-            logger.error("Error creating recipe: {}", errors);
-            return ResponseEntity.badRequest().body(errors.getAllErrors());
-        }
+//        if (errors.hasErrors()) {
+//            logger.error("Error creating recipe: {}", errors);
+//            return ResponseEntity.badRequest().body(errors.getAllErrors());
+//        }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(recipe); // Return the created recipe
     }

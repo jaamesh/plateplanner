@@ -88,17 +88,6 @@ public class RecipeController {
         return ResponseEntity.ok(mealPlans); // Return the meal plans
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Object> createRecipe(@RequestBody @Valid Recipe recipe,  @AuthenticationPrincipal UserDetails userDetails, Errors errors) {
-//        logger.info("In createRecipe...");
-//        recipe.assignToIngredients();
-//        recipeRepository.save(recipe);
-//        if (errors.hasErrors()) {
-//            logger.error("Error creating recipe: {}", errors);
-//        }
-//        return ResponseEntity.noContent().build();
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<Object> createRecipe(@RequestBody @Valid Recipe recipe,
                                                @AuthenticationPrincipal UserDetails userDetails,

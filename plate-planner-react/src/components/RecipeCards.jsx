@@ -3,10 +3,6 @@ import Button from "./Button";
 import RecipeAddTag from "./RecipeAddTag";
 import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
 
-// function handleSaveRecipe(recipeId) {
-//     console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
-// }
-
 function handleSaveRecipe(recipeId, userId) {
     console.log("Saving recipe with ID: " + recipeId + " for user ID: " + userId);
 

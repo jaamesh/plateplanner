@@ -65,7 +65,10 @@ export default {
    * @param {object} shoppingListObject The ShoppingList object to update.
    */
   update(shoppingListId, shoppingListObject) {
-    return httpClient.post(`/shopping-list/update/${shoppingListId}`, shoppingListObject);
+    return httpClient.post(
+      `/shopping-list/update/${shoppingListId}`,
+      shoppingListObject
+    );
   },
   /**
    * This is the DELETE service call to delete a shopping-list by its ID.
@@ -84,17 +87,13 @@ export default {
   //GET request that will fetch the shopping list
 
   getShoppingList() {
-    return httpClient.get('/shopping-list');
+    return httpClient.get("/shopping-list");
   },
 
   //GET request that will create a new shopping list if none exists and populate it with the contents from the meal plan,
   //or if there is a shopping list, it will update it to match the contents of the current meal plan.
 
   createOrUpdateShoppingList() {
-    return httpClient.get()
-
-  }
-
-  
-
+    return httpClient.get("shopping-list/createOrUpdate");
+  },
 };

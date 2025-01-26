@@ -1,5 +1,7 @@
 package org.launchcode.PlatePlanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,10 +15,12 @@ public class ShoppingList extends AbstractEntity {
 
     @OneToOne(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true)
     @NotNull
+    @JsonIgnore
     private MealPlan mealPlan;
 
     @ManyToOne
     @NotNull
+    @JsonIgnoreProperties({"shoppingLists"})
     private User user;
 
     private String name;

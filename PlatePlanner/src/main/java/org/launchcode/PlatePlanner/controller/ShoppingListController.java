@@ -5,6 +5,7 @@ import org.launchcode.PlatePlanner.model.*;
 import org.launchcode.PlatePlanner.repository.MealPlanRepository;
 import org.launchcode.PlatePlanner.repository.ShoppingListRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
+import org.launchcode.PlatePlanner.service.ShoppingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class ShoppingListController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ShoppingListService shoppingListService;
 
     @GetMapping("/all")
     public ResponseEntity<List<ShoppingList>> getAllSavedShoppingLists() {
@@ -92,53 +96,70 @@ public class ShoppingListController {
 
     //A method to update the shopping list with the current meal plan
 
-//    @GetMapping("/createOrUpdate")
-//    public ResponseEntity<ShoppingList> createOrUpdateShoppingList(@AuthenticationPrincipal UserDetails userDetails) {
-//        logger.info("In createOrUpdateShoppingList...");
-//
-//        if (userDetails == null) {
-//            logger.error("No authenticated user found. Cannot create or update meal plan.");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//
-//        String username = userDetails.getUsername();
-//        logger.info("Authenticated user: {}", username);
-//
-//        logger.info("Retrieving userID and shopping list.");
-//
-//        Optional<User> optionalUser = userRepository.findByUsername(username);
-//        if (optionalUser.isEmpty()) {
-//            logger.error("No user found with username: {}", username);
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//
-//        User user = optionalUser.get();
-//        logger.info("User ID: {}", user.getId());
-//
-//
-//        Set<MealPlan> mealPlans = user.getMealPlans();
-//        MealPlan mealPlan;
-//
-//        if (mealPlans.isEmpty()) {
-//            logger.error("User has no saved meal plans");
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        } else {
-//            mealPlan = mealPlans.iterator().next();
-//        }
-//
-//        //retrieve the user's shopping list and
-//
-//        Set<ShoppingList> shoppingLists = user.getShoppingLists();
-//
-//
-//        if (shoppingLists.isEmpty()) {
-//            logger.info("User has no shopping lists. Creating a new shopping list based on the meal plan...");
-//            ShoppingList shoppingList = new ShoppingList()
-//        }
-//
-//        return;
-//
-//    }
+    @GetMapping("/createOrUpdate")
+    public ResponseEntity<ShoppingList> createOrUpdateShoppingList(@AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("In createOrUpdateShoppingList...");
+
+        if (userDetails == null) {
+            logger.error("No authenticated user found. Cannot create or update meal plan.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = userDetails.getUsername();
+        logger.info("Authenticated user: {}", username);
+
+        logger.info("Retrieving userID.");
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            logger.error("No user found with username: {}", username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = optionalUser.get();
+        logger.info("User ID: {}", user.getId());
+
+        logger.info("Retrieving user's meal plan.");
+        Set<MealPlan> mealPlans = user.getMealPlans();
+        if (mealPlans.isEmpty()) {
+            logger.error("User has no saved meal plans");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        MealPlan mealPlan = mealPlans.iterator().next();
+        logger.info("Meal with ID {} found", mealPlan.getId());
+
+        //Aggregate the list of shoppingListItems from the meal plan
+        Set<ShoppingListItem> shoppingListItems = shoppingListService.buildShoppingListItemsFromMealPlan(mealPlan);
+
+        //if user does not have a shopping list, create a new one with ingredients from meal plan
+        //if user has a shopping list already, update it with current meal plan
+
+
+        Set<ShoppingList> shoppingLists = user.getShoppingLists();
+        ShoppingList shoppingList;
+
+        if (shoppingLists.isEmpty()) {
+            logger.info("User has no shopping lists. Creating a new shopping list based on the meal plan...");
+            shoppingList = new ShoppingList();
+            shoppingList.setUser(user);
+            shoppingList.setMealPlan(mealPlan);
+            shoppingList.setShoppingListItems(shoppingListItems);
+            for (ShoppingListItem item : shoppingListItems) {
+                item.setShoppingList(shoppingList);
+            }
+            ShoppingList savedShoppingList = shoppingListRepository.save(shoppingList);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedShoppingList);
+        } else {
+            logger.info("Updating user's existing shopping list with new items.");
+            shoppingList = shoppingLists.iterator().next();
+            shoppingList.getShoppingListItems().clear();
+            shoppingList.getShoppingListItems().addAll(shoppingListItems);
+            for (ShoppingListItem item : shoppingListItems) {
+                item.setShoppingList(shoppingList);
+            }
+            ShoppingList savedShoppingList = shoppingListRepository.save(shoppingList);
+            logger.info("Updated existing shopping list with ID {}", savedShoppingList.getId());
+            return ResponseEntity.ok(savedShoppingList);
+        }
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Object> createShoppingList(@RequestBody @Valid ShoppingList shoppingList, Errors errors) {

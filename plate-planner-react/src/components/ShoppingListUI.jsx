@@ -1,89 +1,53 @@
-import Button from "./Button";
+import shoppingListService from "../services/shoppingListService";
 import { useEffect, useState } from "react";
 
 function ShoppingListUI() {
-    const [shoppingListId, setShoppingListId] = useState(1);
-    const [mealPlanId, setMealPlanId] = useState(1);
+  const [shoppingList, setShoppingList] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [shoppingList, setShoppingList] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const hasItmes = shoppingList?.shoppingListItems?.length > 0;
 
-    useEffect(() => {
-        async function fetchShoppingList() {
-            try {
-                const response = await fetch(`http://localhost:8080/shopping-list/${shoppingListId}`);
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setShoppingList(data);
-                } else if (response.status === 404) {
-                    setShoppingList(null);
-                } else {
-                    setError(`Error fetching shopping list: ${response.status}`);
-                }
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        }
+    shoppingListService
+      .createOrUpdateShoppingList()
+      .then((response) => {
+        setShoppingList(response.data);
+      })
+      .catch((err) => {
+        setError(err.messag || "Failed to load shopping list.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-        fetchShoppingList();
-    }, [shoppingListId]);
+  if (error) {
+    return <p className="error">Error: {error}</p>;
+  }
 
-    const handleCreateOrUpdate = async () => {
-        try {
-            setError(null);
-            //POST http://localhost:8080/shopping-list/${shoppingListId}/create-or-update
+  if (loading) {
+    return <p>Loading shopping list...</p>;
+  }
 
-            const response = await fetch(`http://localhost:8080/shopping-list/${shoppingListId}/sync-with-meal-plan/${mealPlanId}`, 
-                {
-                    method: 'PUT'
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`Failed to create/update shopping list (status: ${response.status})`);
-            }
-
-            const updatedList = await response.json();
-            setShoppingList(updatedList);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
-    if (error) {
-        return <p className="error">Error: {error}</p>;
-    }
-
-    if (loading) {
-        return <p>Loading shopping list...</p>;
-    }
-
-    const hasShoppingList = Boolean(shoppingList);
-
-    return (
-        <div className="card">
-            <Button 
-            label={hasShoppingList ? 'Update Shopping List' : 'Create Shopping List'}
-                onClick={handleCreateOrUpdate}
-            />
-
-        {hasShoppingList && shoppingList.items && shoppingList.items.length > 0 ? (
-            <ul>
-                {shoppingList.items.map((item, index) => (
-                    <li key={index}>
-                        {item.ingredientName} - {item.quantity} {item.unit}
-                    </li>
-                ))}
-            </ul>
-        ) : (
-            <p>No items yet.</p>
-        )}
-        </div>
-    );
+  return (
+    <div className="card">
+      {shoppingList && hasItmes ? (
+        <ul className="list-group">
+          {shoppingList.shoppingListItems.map((item, index) => (
+            <li key={index} className="list-group-item">
+              {item.ingredient.name} - {item.quantity} {item.unit}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No items yet.</p>
+      )}
+    </div>
+  );
 }
 
 export default ShoppingListUI;

@@ -136,5 +136,9 @@ export default {
 
   getUserMealPlan() {
     return httpClient.get("/meal-plan");
+  },
+
+  deleteMealPlanRecipe(mealPlanRecipeId) {
+    return httpClient.delete(`/meal-plan/delete/mealPlanRecipe/${mealPlanRecipeId}`);
   }
 }

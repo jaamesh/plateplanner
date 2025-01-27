@@ -46,7 +46,7 @@ function RecipeCards(props) {
                     </div>
                     }
                     <h3>Ingredients:</h3>
-                    <ul>
+                    <ul className="list-unstyled">
                         {recipe.recipeIngredients.map((ingredient) => (
                             <li key={ingredient.id != null ? ingredient.id : ingredient.name}>
                                 {ingredient.quantity} {ingredient.unit} {ingredient.ingredient.name}

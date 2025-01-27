@@ -1,5 +1,6 @@
 package org.launchcode.PlatePlanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -25,7 +26,7 @@ public class Recipe extends AbstractEntity {
     private Set<User> user = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties({"recipe"})
+    @JsonIgnore
     private List<MealPlanRecipe> mealPlanRecipes = new ArrayList<>();
 
     @NotNull

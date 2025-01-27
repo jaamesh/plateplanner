@@ -17,7 +17,7 @@ public class Ingredient extends AbstractEntity {
     private String name;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RecipeIngredient> recipeIngredient = new HashSet<>();
+    private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
 
     public Ingredient() {}
 

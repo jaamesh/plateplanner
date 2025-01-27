@@ -1,6 +1,7 @@
 package org.launchcode.PlatePlanner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -14,11 +15,12 @@ public class RecipeIngredient extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "recipe_id", nullable = false)
-    @JsonIgnore
+    @JsonIgnoreProperties({"recipeIngredients"})
     private Recipe recipe;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ingredient_id", nullable = false)
+    @JsonIgnoreProperties({"recipeIngredients"})
     private Ingredient ingredient;
 
     @NotNull

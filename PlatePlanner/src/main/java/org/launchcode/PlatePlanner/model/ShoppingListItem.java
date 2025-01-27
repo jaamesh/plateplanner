@@ -1,5 +1,7 @@
 package org.launchcode.PlatePlanner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
@@ -11,6 +13,7 @@ public class ShoppingListItem extends AbstractEntity {
 
     @ManyToOne
     @NotNull
+    @JsonIgnore
     private ShoppingList shoppingList;
 
     @ManyToOne

@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 import RecipeAddTag from "./RecipeAddTag";
 import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
+import recipeService from "../services/recipeService";
 
-function handleSaveRecipe(recipeId) {
-    console.log("Recipe with ID (" + recipeId + ") saved to My Recipes!")
+function handleSaveRecipe(recipe) {
+    console.log("Saving recipe:" + recipe);
+
+    recipeService.create(recipe);
 }
 
 function handleAddRecipeToMealPlan(recipeId) {
@@ -59,7 +62,7 @@ function RecipeCards(props) {
                         <div className="row justify-content-around">
                         {recipe.id == null &&
                             <div className="col-4">
-                                <Button label="Save Recipe" onClick={() => handleSaveRecipe(recipe.id)}/>
+                                <Button label="Save Recipe" onClick={() => handleSaveRecipe(recipe)}/>
                             </div>
                         }
                         {recipe.id != null &&

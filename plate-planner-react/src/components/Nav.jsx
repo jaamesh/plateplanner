@@ -17,10 +17,10 @@ const Nav = () => {
           Saved Recipes
         </Link>
         <Link className="nav-link" to="/meal-plans">
-          Meal Plans
+          Meal Plan
         </Link>
         <Link className="nav-link" to="/shopping-lists">
-          Shopping Lists
+          Shopping List
         </Link>
         <Link className="nav-link" to="http://localhost:8080/profile">
           Hi {userName}

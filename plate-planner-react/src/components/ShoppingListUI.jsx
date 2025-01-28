@@ -34,7 +34,7 @@ function ShoppingListUI() {
   }
 
   return (
-    <div className="card">
+    <div className="card component shopping-list">
       {shoppingList && hasItmes ? (
         <ul className="list-group">
           {shoppingList.shoppingListItems.map((item, index) => (

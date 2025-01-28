@@ -84,41 +84,40 @@ const MealPlanUI = () => {
   return (
     <div>
       <h2 className="mealplan-header">Meal Plan</h2>
-      <div className="meal-plan-ui-container border rounded">
-        {daysOfTheWeek.map((day) => (
-          <div key={day.name} className="card m-4">
-            <h2 className="text-start">{day.name}</h2>
-            {day.recipes.map((recipeObj) => (
-              <div key={recipeObj.mealPlanRecipeId} className="recipe-item">
-                <span
-                  onClick={() => {
-                    setSelectedRecipeId(recipeObj.id);
-                    setShowModal(true);
-                  }}
-                  style={{ cursor: "pointer", textDecoration: "underline" }}
-                >
-                  {recipeObj.name}
-                </span>
-                <img
-                  src={trashcanIcon}
-                  alt="Delete Item"
-                  onClick={() => removeRecipe(recipeObj.mealPlanRecipeId)}
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    cursor: "pointer",
-                  }}
-                />
-              </div>
-            ))}
-            <div className="text-end">
-              <Button
-                label="Add Recipe"
-                onClick={() => handleAddRecipeClick()}
-              />
+      <div className="meal-plan-ui-container border rounded component">
+        <div className="days-container">
+          {daysOfTheWeek.map((day) => (
+            <div key={day.name} className="card m-4 day-card">
+              <h2 className="text-start">{day.name}</h2>
+              {day.recipes.map((recipeObj) => (
+                <div key={recipeObj.mealPlanRecipeId} className="recipe-item">
+                  <span
+                    onClick={() => {
+                      setSelectedRecipeId(recipeObj.id);
+                      setShowModal(true);
+                    }}
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
+                  >
+                    {recipeObj.name}
+                  </span>
+                  <img
+                    src={trashcanIcon}
+                    alt="Delete Item"
+                    onClick={() => removeRecipe(recipeObj.mealPlanRecipeId)}
+                    style={{
+                      width: "15px",
+                      height: "15px",
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+              ))}
             </div>
+          ))}
+          <div className="add-recipe-card">
+            <Button label="Add Recipe" onClick={() => handleAddRecipeClick()} />
           </div>
-        ))}
+        </div>
         <hr />
       </div>
       {showModal && selectedRecipeId && (

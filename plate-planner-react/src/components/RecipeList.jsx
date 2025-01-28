@@ -12,6 +12,7 @@ const RecipeList = () => {
   const [showLoginNotice, setShowLoginNotice] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [stateCounter, setStateCounter] = useState(0);
   const userName = Cookies.get('username');
 
   // If the user is logged in, get all recipes saved by the user.  Otherwise, set the hook to show a login notice.
@@ -32,6 +33,19 @@ const RecipeList = () => {
       setLoading(false);
     }
   }, [userName]);
+
+  // if stateCounter changes, reload the recipes (which reloads the tags).
+  useEffect(() => {
+    console.log('Reloading recipes because state counter changed.');
+    recipeService.getAllByUser()
+      .then((response) => {
+        setRecipes(response.data);
+      })
+      .catch((err) => {
+        console.log("Error retrieving saved recipes: ", err.message);
+        setError("There was a problem retrieving your saved recipes.");
+      });
+  }, [stateCounter]);
 
   // Extract unique tags from recipes
   useEffect(() => {
@@ -130,7 +144,7 @@ const RecipeList = () => {
       {recipes.length === 0 ? (
         <p>No recipes found.</p>
       ) : (
-        <RecipeCards recipes={filteredRecipes}/>
+        <RecipeCards recipes={filteredRecipes} stateCounter={stateCounter} setStateCounter={setStateCounter}/>
       )}
     </div>
   );

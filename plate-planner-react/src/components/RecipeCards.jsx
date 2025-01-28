@@ -12,11 +12,12 @@ function handleAddRecipeToMealPlan(recipeId) {
 // this will tell RecipeCards what props (and what the types are) so intellij doesn't freak out!
 RecipeCards.propTypes = {
   recipes: PropTypes.array,
-  title: PropTypes.string
+  title: PropTypes.string,
+  stateCounter: PropTypes.number,
+  setStateCounter: PropTypes.func,
 };
 
-function RecipeCards({recipes = [], title}) {
-  const [stateCounter, setStateCounter] = useState(0);
+function RecipeCards({recipes = [], title, stateCounter, setStateCounter}) {
   if (recipes !== undefined) {
     return (
       <div key="recipecards">
@@ -69,7 +70,7 @@ function RecipeCards({recipes = [], title}) {
                 }
                 {recipe.id != null &&
                   <div className="col-4">
-                    <RecipeAddTag recipe={recipe} setStateCounter={setStateCounter} counter={stateCounter}/>
+                    <RecipeAddTag recipe={recipe} setStateCounter={setStateCounter} stateCounter={stateCounter}/>
                   </div>
                 }
               </div>

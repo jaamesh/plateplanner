@@ -2,10 +2,7 @@ package org.launchcode.PlatePlanner.controller;
 
 
 import jakarta.validation.Valid;
-import org.launchcode.PlatePlanner.model.MealPlan;
-import org.launchcode.PlatePlanner.model.Recipe;
-import org.launchcode.PlatePlanner.model.Tag;
-import org.launchcode.PlatePlanner.model.User;
+import org.launchcode.PlatePlanner.model.*;
 import org.launchcode.PlatePlanner.repository.RecipeRepository;
 import org.launchcode.PlatePlanner.repository.TagRepository;
 import org.launchcode.PlatePlanner.repository.UserRepository;
@@ -19,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("recipe")
@@ -45,6 +39,28 @@ public class RecipeController {
     public ResponseEntity<List<Recipe>> getAllSavedRecipes() {
         logger.info("In getAllSavedRecipes...");
         return ResponseEntity.ok(recipeRepository.findAll());
+    }
+
+    @GetMapping("/allbyuser")
+    public ResponseEntity<List<Recipe>> getAllSavedRecipesByUser(@AuthenticationPrincipal UserDetails userDetails) {
+        logger.info("In getAllSavedRecipesByUser...");
+
+        if (userDetails == null) {
+            logger.error("No authenticated user found. Cannot retrieve recipes.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = userDetails.getUsername();
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            logger.error("No user found with username: {}", username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = optionalUser.get();
+
+        List<Recipe> recipes = recipeRepository.findByUser(user);
+
+        return ResponseEntity.ok(recipes);
     }
 
     @GetMapping("/{recipeId}")
@@ -76,10 +92,42 @@ public class RecipeController {
             logger.error("No user found with username: {}", username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        recipe.setDescription("James");
         User user = optionalUser.get();
-        recipe.setUser(user); // Associate the recipe with the user
+
+        // See if the recipe already exists for this user.
+        List<Recipe> recipes = recipeRepository.findByNameAndUser(recipe.getName(), user);
+        if (!recipes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+
+        // Set description to empty string instead of null.
+        if (recipe.getDescription() == null) { recipe.setDescription(""); }
+
+        // Add the user to the recipe.
+        recipe.addUser(user);
+
+        // Reference the recipe in all of the ingredients.
+        Set<RecipeIngredient> ingredients = recipe.getRecipeIngredients();
+        Iterator ingIterator = ingredients.iterator();
+        while (ingIterator.hasNext()) {
+            RecipeIngredient ingredient = (RecipeIngredient) ingIterator.next();
+            ingredient.setRecipe(recipe);
+        }
+
+        // Save all new tags to the database and load those that already exist.
+        Set<Tag> tags = recipe.getTags();
+        Iterator tagIterator = tags.iterator();
+        while (tagIterator.hasNext()) {
+            Tag tag = (Tag) tagIterator.next();
+            List<Tag> tagsNamed = tagRepository.findByName(tag.getName());
+            if (tagsNamed.isEmpty()) {
+                tag = tagRepository.save(tag);
+            } else {
+                tag = tagsNamed.get(0);
+            }
+        }
+
+        // Save the recipe.
         recipeRepository.save(recipe);
 
 //        if (errors.hasErrors()) {

@@ -28,6 +28,19 @@ export default {
     return httpClient.get("/recipe/all");
   },
   /**
+   * This is the GET service call to retrieve all recipes for the logged in user.
+   * It will return a 200 response with a list of all recipes.
+   *
+   * It hits the /recipe/allbyuser endpoint with a GET request.
+   *
+   * To use it in a component, you would do something like this:
+   * @example recipeService.getAllByUser().then((response) => console.log(response.data));
+   * @returns A list of all Recipe objects.
+   */
+  getAllByUser() {
+    return httpClient.get("/recipe/allbyuser");
+  },
+  /**
    * This is the GET service call to retrieve a recipe by its ID.
    * It will return a 200 response with the recipe object.
    * If no recipe is found with the specified ID, it will return a 404.
@@ -52,6 +65,9 @@ export default {
    * @param {object} recipeObject The Recipe object to create.
    */
   create(recipeObject) {
+    console.log("recipe tags:", recipeObject.tags);
+    console.log("recipe ingredients:", recipeObject.recipeIngredients);
+    
     return httpClient.post("/recipe/create", recipeObject);
   },
   /**

@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import Button from "./Button";
+import RecipeSave from "./RecipeSave";
 import RecipeAddTag from "./RecipeAddTag";
 import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
-import recipeService from "../services/recipeService";
-
-function handleSaveRecipe(recipe) {
-    console.log("Saving recipe:" + recipe);
-
-    recipeService.create(recipe);
-}
 
 function handleAddRecipeToMealPlan(recipeId) {
     //open a modal, allow user to select meal plan or create new meal plan, call API
@@ -62,7 +56,7 @@ function RecipeCards(props) {
                         <div className="row justify-content-around">
                         {recipe.id == null &&
                             <div className="col-4">
-                                <Button label="Save Recipe" onClick={() => handleSaveRecipe(recipe)}/>
+                               <RecipeSave recipe={recipe} />
                             </div>
                         }
                         {recipe.id != null &&

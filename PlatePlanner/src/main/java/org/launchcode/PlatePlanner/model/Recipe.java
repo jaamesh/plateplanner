@@ -26,7 +26,6 @@ public class Recipe extends AbstractEntity {
     private Set<User> user = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<MealPlanRecipe> mealPlanRecipes = new ArrayList<>();
 
     @NotNull
@@ -40,6 +39,7 @@ public class Recipe extends AbstractEntity {
     @NotNull
     @Size(min=1, max=25, message="Number of ingredients must be between 1 and 25.")
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"recipe"})
     private Set<RecipeIngredient> recipeIngredients = new HashSet<>();
 
     @NotNull
@@ -194,6 +194,8 @@ public class Recipe extends AbstractEntity {
             ingredient.setRecipe(this);
         }
     }
+
+    public void addUser (User user) { this.user.add(user); }
 
     @Override
     public String toString() {

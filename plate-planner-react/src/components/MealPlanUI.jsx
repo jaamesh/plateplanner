@@ -118,7 +118,6 @@ const MealPlanUI = () => {
             <Button label="Add Recipe" onClick={() => handleAddRecipeClick()} />
           </div>
         </div>
-        <hr />
       </div>
       {showModal && selectedRecipeId && (
         <RecipeCardModal

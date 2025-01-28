@@ -193,7 +193,7 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Override
     public String toString() {
-        return "Username: " + this.username + " | User ID: " + this.getId();
+        return "Username: " + this.username;
     }
 
     //UserDetails Implementations:

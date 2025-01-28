@@ -37,7 +37,7 @@ function App() {
               href="https://www.flaticon.com/free-stickers/breakfast"
               title="breakfast stickers"
             >
-              Images by Stickers - Flaticon
+              Artwork by Stickers - Flaticon
             </a>
           </small>
         </div>

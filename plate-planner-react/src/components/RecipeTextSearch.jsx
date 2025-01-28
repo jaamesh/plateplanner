@@ -1,60 +1,67 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import RecipeCards from './RecipeCards.jsx';
-
-
+import RecipeCards from "./RecipeCards.jsx";
 
 const RecipeTextSearch = () => {
-    const [query, setQuery] = useState('');
-    const [searchRecipes, setSearchRecipes] = useState();
-    const [loading, setLoading] = useState(null);
-    const [error, setError] = useState(null);
+  const [query, setQuery] = useState("");
+  const [searchRecipes, setSearchRecipes] = useState();
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
 
-    const handleInputChange = (e) => {
-        setQuery(e.target.value);
-    };
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
+  };
 
-    //http://localhost:8080/search-recipes?q=${query}
-    //http://localhost:8080/recipes
+  //http://localhost:8080/search-recipes?q=${query}
+  //http://localhost:8080/recipes
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        fetch('http://localhost:8080/search-recipes?q=' + query, {
-            credentials: 'include',
-            mode: 'cors'
-          })
-        .then(response => response.json())
-        .then(data => { 
-            setSearchRecipes(data);
-            setLoading(false);
-        })
-        .catch(err => {
-            setError(err.message);
-            setLoading(false);
-        });
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    fetch("http://localhost:8080/search-recipes?q=" + query, {
+      credentials: "include",
+      mode: "cors",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSearchRecipes(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  };
 
-    if (loading) {
-        return <p>Loading recipes...</p>;
-    }
+  if (loading) {
+    return <p>Loading recipes...</p>;
+  }
 
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
-
-    return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Search:
-                    <input type="text" value={query} onChange={handleInputChange} />
-                </label>
-                <button type="submit">Submit</button>
-            </form>
-            <RecipeCards recipes={searchRecipes} title="Search Results" />
-            {/*
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>
+            Search:
+            <input
+              type="text"
+              value={query}
+              onChange={handleInputChange}
+              className="form-control"
+              placeholder="search for a delicious recipe"
+            />
+          </label>
+        </div>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+      </form>
+      <RecipeCards recipes={searchRecipes} title="Search Results" />
+      {/*
             {recipes.map((recipe) => (
                 <div key={recipe.id} className="card">
                     <h2 className='card-title'>{recipe.name}</h2>
@@ -73,11 +80,9 @@ const RecipeTextSearch = () => {
                 </div>
             ))}
             */}
-        </div>
-    );
+    </div>
+  );
 };
-
-
 
 /*
 function SearchForm () {
@@ -90,6 +95,5 @@ function SearchForm () {
         );
 }
 */
-
 
 export default RecipeTextSearch;

@@ -63,6 +63,7 @@ public class MealPlanController {
     @GetMapping
     public ResponseEntity<Optional<MealPlan>> getOrCreateMealPlan(@AuthenticationPrincipal UserDetails userDetails) {
 
+        System.out.println("User details: " + userDetails);
         if (userDetails == null) {
             logger.error("No authenticated user found. Cannot retrieve meal plan.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

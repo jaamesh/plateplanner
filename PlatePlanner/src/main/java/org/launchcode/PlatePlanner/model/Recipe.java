@@ -26,7 +26,7 @@ public class Recipe extends AbstractEntity {
     private Set<User> user = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @JsonIgnoreProperties({"recipe"})
     private List<MealPlanRecipe> mealPlanRecipes = new ArrayList<>();
 
     @NotNull

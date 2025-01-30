@@ -16,6 +16,7 @@ public class Tag extends AbstractEntity {
 
     @ManyToMany(mappedBy = "tags")
     @NotNull
+    @JsonIgnoreProperties({"tags"})
     private Set<Recipe> recipes = new HashSet<>();
 
     @NotNull

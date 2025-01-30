@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     MDBBtn,
     MDBModal,
@@ -13,6 +13,7 @@ import Button from "./Button";
 import mealPlanService from "../services/mealPlanService";
 import DayOfWeekSelection from "./DayOfWeekSelection";
 
+
 function AddRecipeToMealPlan({ recipeId }) {
     const [basicModal, setBasicModal] = useState(false);
     const [error, setError] = useState(null);
@@ -20,6 +21,25 @@ function AddRecipeToMealPlan({ recipeId }) {
     const [selectedMealPlan, setSelectedMealPlan] = useState("");
     const [selectedDay, setSelectedDay] = useState("");
     const [mealPlanId, setMealPlanId] = useState(1);
+
+    useEffect(() => {
+    mealPlanService
+      .getUserMealPlan()
+      .then((response) => {
+        return response.data;
+      })
+      .then((data) => {
+        if (data && data.id) {
+            setMealPlanId(data.id);
+        } else {
+            setError("There was a problem connecting to the database.  Please try again later.");
+        }
+      })
+      .catch((error) => {
+        setError("There was a problem connecting to the database.  Please try again later.");
+        console.error("Error fetching meal plan:", error);
+      });
+    }, []);
 
     const handleDayChange = (day) => {
         setSelectedDay(day);

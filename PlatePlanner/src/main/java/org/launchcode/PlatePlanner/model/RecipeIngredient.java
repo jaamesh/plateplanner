@@ -20,7 +20,7 @@ public class RecipeIngredient extends AbstractEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ingredient_id", nullable = false)
-    @JsonIgnoreProperties({"recipe"})
+    @JsonIgnoreProperties({"recipeIngredients"})
     private Ingredient ingredient;
 
     @NotNull

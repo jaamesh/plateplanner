@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import Cookies from 'js-cookie';
-import RecipeCards from './RecipeCards.jsx';
+import Cookies from "js-cookie";
+import RecipeCards from "./RecipeCards.jsx";
 import recipeService from "@/services/recipeService.js";
 
 const RecipeList = () => {
@@ -13,12 +13,13 @@ const RecipeList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stateCounter, setStateCounter] = useState(0);
-  const userName = Cookies.get('username');
+  const userName = Cookies.get("username");
 
   // If the user is logged in, get all recipes saved by the user.  Otherwise, set the hook to show a login notice.
   useEffect(() => {
     if (userName !== null && userName !== undefined && userName.length > 0) {
-      recipeService.getAllByUser()
+      recipeService
+        .getAllByUser()
         .then((response) => {
           setRecipes(response.data);
           setLoading(false);
@@ -36,8 +37,9 @@ const RecipeList = () => {
 
   // if stateCounter changes, reload the recipes (which reloads the tags).
   useEffect(() => {
-    console.log('Reloading recipes because state counter changed.');
-    recipeService.getAllByUser()
+    console.log("Reloading recipes because state counter changed.");
+    recipeService
+      .getAllByUser()
       .then((response) => {
         setRecipes(response.data);
       })
@@ -52,26 +54,30 @@ const RecipeList = () => {
     // We'll just return if there are no recipes.
     if (recipes.length === 0) return;
     // This will make an array of all the tags and flatten it so we don't get any nasty nested stuff
-    const allTags = recipes.map(recipe => recipe.tags).flat();
+    const allTags = recipes.map((recipe) => recipe.tags).flat();
     // This makes a list of just unique names that we will use to filter the tags...
-    const uniqueTagNames = new Set(allTags.map(tag => tag.name));
+    const uniqueTagNames = new Set(allTags.map((tag) => tag.name));
     // ...here
-    const uniqueTags = Array.from(uniqueTagNames)
-      .map(tagName => allTags.find(tag => tag.name === tagName));
+    const uniqueTags = Array.from(uniqueTagNames).map((tagName) =>
+      allTags.find((tag) => tag.name === tagName)
+    );
     setTags(uniqueTags);
   }, [recipes]);
 
   /**
    * This little helper function will filter recipes based on selected tags.
    */
-  const filterRecipesByTags = useCallback((recipesToFilter) => {
-    if (!selectedTags.length) return recipesToFilter;
-    return recipesToFilter.filter((recipe) =>
-      selectedTags.every((selectedTag) =>
-        recipe.tags.some((recipeTag) => recipeTag.name === selectedTag.name)
-      )
-    );
-  }, [selectedTags]);
+  const filterRecipesByTags = useCallback(
+    (recipesToFilter) => {
+      if (!selectedTags.length) return recipesToFilter;
+      return recipesToFilter.filter((recipe) =>
+        selectedTags.every((selectedTag) =>
+          recipe.tags.some((recipeTag) => recipeTag.name === selectedTag.name)
+        )
+      );
+    },
+    [selectedTags]
+  );
 
   // Update filtered recipes whenever recipes or selected tags change
   useEffect(() => {
@@ -114,37 +120,47 @@ const RecipeList = () => {
 
   return (
     <div>
-      {tags.length > 0 && (
-        <>
-          <h2>Tags</h2>
-          <div>
-            {tags.map((tag) => (
-              <button
-                key={tag.name}
-                onClick={() => toggleTag(tag)}
-                style={{
-                  backgroundColor: selectedTags.some((t) => t.name === tag.name)
-                    ? "blue"
-                    : "gray",
-                  color: "white",
-                  margin: "5px",
-                  padding: "5px 10px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                {tag.name}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
       <h2>Saved Recipes</h2>
       {recipes.length === 0 ? (
         <p>No recipes found.</p>
       ) : (
-        <RecipeCards recipes={filteredRecipes} stateCounter={stateCounter} setStateCounter={setStateCounter}/>
+        <div>
+          <div>
+            {tags.length > 0 && (
+              <>
+                <h4>Tags</h4>
+                <div>
+                  {tags.map((tag) => (
+                    <button
+                      key={tag.name}
+                      onClick={() => toggleTag(tag)}
+                      style={{
+                        backgroundColor: selectedTags.some(
+                          (t) => t.name === tag.name
+                        )
+                          ? "#0d6efd"
+                          : "gray",
+                        color: "white",
+                        margin: "5px",
+                        padding: "5px 10px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {tag.name}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+          <RecipeCards
+            recipes={filteredRecipes}
+            stateCounter={stateCounter}
+            setStateCounter={setStateCounter}
+          />
+        </div>
       )}
     </div>
   );

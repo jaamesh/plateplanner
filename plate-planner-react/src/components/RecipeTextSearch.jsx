@@ -4,9 +4,10 @@ import RecipeCards from "./RecipeCards.jsx";
 
 const RecipeTextSearch = () => {
   const [query, setQuery] = useState("");
-  const [searchRecipes, setSearchRecipes] = useState();
+  const [searchRecipes, setSearchRecipes] = useState([]);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -18,6 +19,7 @@ const RecipeTextSearch = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    setHasSearched(true);
     fetch("http://localhost:8080/search-recipes?q=" + query, {
       credentials: "include",
       mode: "cors",
@@ -60,7 +62,11 @@ const RecipeTextSearch = () => {
           Submit
         </button>
       </form>
-      <RecipeCards recipes={searchRecipes} title="Search Results" />
+      <RecipeCards
+        recipes={searchRecipes}
+        title="Search Results"
+        hasSearched={hasSearched}
+      />
       {/*
             {recipes.map((recipe) => (
                 <div key={recipe.id} className="card">

@@ -2,12 +2,6 @@ import AddRecipeToMealPlan from "./AddRecipeToMealPlan";
 import PropTypes from "prop-types";
 import RecipeAddTag from "./RecipeAddTag";
 import RecipeSave from "./RecipeSave";
-import { useState } from "react";
-
-function handleAddRecipeToMealPlan(recipeId) {
-  //open a modal, allow user to select meal plan or create new meal plan, call API
-  console.log("Recipe with ID (" + recipeId + ") saved to Meal Plan!");
-}
 
 // this will tell RecipeCards what props (and what the types are) so intellij doesn't freak out!
 RecipeCards.propTypes = {
@@ -43,7 +37,7 @@ function RecipeCards({
             <img
               src={recipe.imageURL}
               alt={recipe.name + " image"}
-              className="card-img-top mx-auto d-block w-25"
+              className="card-img mx-auto d-block w-25"
             />
             {recipe.tags != null && recipe.tags.length > 0 && (
               <div className="container">

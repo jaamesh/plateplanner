@@ -1,22 +1,24 @@
 package org.launchcode.PlatePlanner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails {
 
     @NotNull
@@ -25,12 +27,13 @@ public class User extends AbstractEntity implements UserDetails {
     private String username;
 
     @NotNull
+    @Column(nullable = false)
     @Length(min = 60, max = 120, message = "Password must be a valid hash.")
     private String password;
 
     @NotNull
     @Email
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotNull
@@ -41,7 +44,10 @@ public class User extends AbstractEntity implements UserDetails {
     private LocalDateTime createdAt;
 
     @NotNull
+    @Column(nullable = false)
     private boolean enabled;
+
+    private String verificationToken;
 
     private String firstName;
     private String lastName;
@@ -59,7 +65,7 @@ public class User extends AbstractEntity implements UserDetails {
     @JsonIgnore
     private Set<ShoppingList> shoppingLists = new HashSet<>();
 
-    public User() {}
+//    public User() {}
 
     public User(String username, String password, String email, Role role) {
         this.username = username;

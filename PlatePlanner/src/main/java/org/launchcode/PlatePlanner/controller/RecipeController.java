@@ -116,16 +116,30 @@ public class RecipeController {
 
         // Save all new tags to the database and load those that already exist.
         Set<Tag> tags = recipe.getTags();
-        Iterator tagIterator = tags.iterator();
-        while (tagIterator.hasNext()) {
-            Tag tag = (Tag) tagIterator.next();
+        Set<Tag> managedTags = new HashSet<>();
+
+        for (Tag tag : tags) {
             List<Tag> tagsNamed = tagRepository.findByName(tag.getName());
             if (tagsNamed.isEmpty()) {
                 tag = tagRepository.save(tag);
             } else {
                 tag = tagsNamed.get(0);
             }
+            managedTags.add(tag);
         }
+
+        recipe.setTags(managedTags);
+
+//        Iterator tagIterator = tags.iterator();
+//        while (tagIterator.hasNext()) {
+//            Tag tag = (Tag) tagIterator.next();
+//            List<Tag> tagsNamed = tagRepository.findByName(tag.getName());
+//            if (tagsNamed.isEmpty()) {
+//                tag = tagRepository.save(tag);
+//            } else {
+//                tag = tagsNamed.get(0);
+//            }
+//        }
 
         // Save the recipe.
         recipeRepository.save(recipe);

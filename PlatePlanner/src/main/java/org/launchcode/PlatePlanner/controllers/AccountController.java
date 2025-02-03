@@ -60,7 +60,7 @@ public class AccountController {
     @GetMapping("/verify-email")
     public String verifyEmail(@RequestParam(value = "token", required = false) String token, Model model) {
         if (token == null || token.isEmpty()) {
-            model.addAttribute("message", "Verification token is missing.");
+            model.addAttribute("message", "Please check your email.");
             return "verify-email"; // Return to the same page with an error message
         }
 

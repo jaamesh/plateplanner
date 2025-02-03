@@ -28,9 +28,9 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         tokenService.createVerificationToken(user, token);
 
         String recipientAddress = user.getEmail();
-        String subject = "Email Verification";
-        String confirmationUrl = "http://localhost:8080/verify-email?token=" + token;
-        String message = "Click the link to verify your email: " + confirmationUrl;
+        String subject = "Welcome Email";
+        String confirmationUrl = "http://localhost:5173/";
+        String message = "Welcome to PlatePlanner! We are thrilled to have you on board and can't wait for you to explore delicious recipes. " + confirmationUrl;
 
         emailService.sendEmail(recipientAddress, subject, message);
     }

@@ -28,7 +28,7 @@ public class UserService {
         user.setVerificationToken(token);
         userRepository.save(user);
 
-        String confirmationUrl = "http://localhost:8080/verify-email?token=" + token;
+        String confirmationUrl = "http://localhost:5173/";
         System.out.println("Sending email to " + user.getEmail());
         emailService.sendEmail(user.getEmail(), "Email Verification", "Click the link to verify your email: " + confirmationUrl);
 

@@ -67,7 +67,7 @@ export default function App(props) {
                                 <Link className="btn btn-primary" to="/saved-recipes">Saved Recipes</Link>
                             }
                             {userName == null &&
-                                <Link className="btn btn-primary" to="http://localhost:8080/login">Login/Register</Link>
+                                <a className="btn btn-primary" href="/login">Login/Register</a>
                             }      
                             <Button label="Close" onClick={closeWindow} />                      
                         </MDBModalFooter>

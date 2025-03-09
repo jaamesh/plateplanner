@@ -6,8 +6,6 @@ import Nav from "./components/Nav.jsx";
 import Home from "./components/Home.jsx";
 import MealPlanUI from "./components/MealPlanUI";
 import ShoppingList from "./components/ShoppingList.jsx";
-import UserProfile from "./components/UserProfile.jsx";
-import LogOut from "./components/LogOut.jsx";
 import RandomImage from "./components/RandomImage.jsx";
 import Footer from "./components/Footer.jsx";
 
@@ -23,8 +21,6 @@ function App() {
             <Route path="/saved-recipes" element={<RecipeList />} />
             <Route path="/meal-plans" element={<MealPlanUI />} />
             <Route path="/shopping-lists" element={<ShoppingList />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/logout" element={<LogOut />} />
           </Routes>
           <div className="content-wrapper"></div>
           <RandomImage />

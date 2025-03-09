@@ -13,14 +13,11 @@ const RecipeTextSearch = () => {
     setQuery(e.target.value);
   };
 
-  //http://localhost:8080/search-recipes?q=${query}
-  //http://localhost:8080/recipes
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setHasSearched(true);
-    fetch("http://localhost:8080/search-recipes?q=" + query, {
+    fetch("/search-recipes?q=" + query, {
       credentials: "include",
       mode: "cors",
     })

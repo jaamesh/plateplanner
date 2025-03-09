@@ -13,10 +13,10 @@ import java.util.HashMap;
 @Controller
 public class HomeController {
 
-    @GetMapping({"", "/"})
-    public String home() {
-        return "index";
-    }
+//    @GetMapping({"", "/"})
+//    public String home() {
+//        return "index";
+//    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/store/user")

@@ -10,7 +10,7 @@ import axios from 'axios';
  * @return An axios instance with the base URL set to our backend server.
  */
 const httpClient = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: '/',
   withCredentials: true
 });
 
